@@ -1,13 +1,13 @@
 <template>
   <h1>Dashboard</h1>
   <Map />
-  <Table v-bind:data="data"/>
+  <Table v-bind:data="data" />
   <Chart />
-  <List />
+  <List  v-bind:data="data" v-bind:error="error" v-bind:loading="loading" />
 </template>
 
 <script>
-import { getData } from '../service/data';
+import { DataService } from '../service/DataService';
 import Map from './Map.vue';
 import List from './List.vue';
 import Table from './Table.vue';
@@ -23,12 +23,30 @@ export default {
   },
   data() {
     return {
-      data: getData(),
+      loading: false,
+      error: null,
+      data: null,
+      dataService: new DataService(),
     };
+  },
+  created() {
+    this.fetchData();
+  },
+  methods: {
+    fetchData() {
+      this.loading = true;
+      this.dataService.init().then((res) => {
+        this.data = res;
+        this.loading = false;
+      }).catch((err) => {
+        this.error = err.toString();
+        this.loading = false;
+        throw new Error('Failed to fetch data on init', err);
+      });
+    },
   },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 </style>
