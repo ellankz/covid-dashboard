@@ -1,6 +1,6 @@
 <template>
   <h2>Table</h2>
-  <p>total: {{ data.Global.TotalConfirmed }}</p>
+  <p>total: {{ data }}</p>
 </template>
 
 <script>
@@ -14,7 +14,6 @@ export default {
   },
   methods: {
     logData() {
-      console.log(this.data.Global.NewConfirmed);
       console.log(this.data);
     },
   },
