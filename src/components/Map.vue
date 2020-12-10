@@ -1,5 +1,10 @@
 <template>
-  <h2>Map</h2>
+  <div>
+    <h2>Map</h2>
+    <div class="content">
+      <p>No info</p>
+    </div>
+  </div>
 </template>
 
 <script>

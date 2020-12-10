@@ -14,7 +14,5 @@ export default {
 </script>
 
 <style lang="scss">
-* {
-  box-sizing: border-box;
-}
+  @import "@/styles/_general.scss";
 </style>

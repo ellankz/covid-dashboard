@@ -1,15 +1,17 @@
 <template>
-  <h2>Table</h2>
-   <div v-if="loadingState.loading" class="loading">
-      Loading...
-    </div>
+  <div>
+    <h2>Table</h2>
+    <div v-if="loadingState.loading" class="loading">
+        Loading...
+      </div>
 
-    <div v-if="loadingState.error" class="error">
-      {{ error }}
-    </div>
+      <div v-if="loadingState.error" class="error">
+        {{ error }}
+      </div>
 
-    <div v-if="data" class="content">
-      <p>total: {{ data.Global.Summary.Total.Confirmed }}</p>
+      <div v-if="data" class="content">
+        <p>total: {{ data.Global.Summary.Total.Confirmed }}</p>
+      </div>
     </div>
 </template>
 

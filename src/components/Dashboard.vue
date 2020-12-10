@@ -1,9 +1,11 @@
 <template>
   <h1>Dashboard</h1>
-  <Map />
-  <Table v-bind:data="data" v-bind:loadingState="loadingState" />
-  <Chart />
-  <List  v-bind:data="data" v-bind:loadingState="loadingState" />
+  <div class="dashboard">
+    <Map class="map dashboard__element" />
+    <Table class="table dashboard__element" v-bind:data="data" v-bind:loadingState="loadingState" />
+    <Chart class="chart dashboard__element" />
+    <List class="list dashboard__element"  v-bind:data="data" v-bind:loadingState="loadingState" />
+  </div>
 </template>
 
 <script>
@@ -51,4 +53,34 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .dashboard {
+    display: grid;
+    grid-template-areas: "list map table"
+                         "list  map chart";
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 4fr 2fr;
+    grid-gap: 0.5rem;
+
+    &__element {
+      background-color: $color-gray;
+      border-radius: 5px;
+      padding: 0.8rem;
+    }
+  }
+
+  .map {
+    grid-area: map;
+  }
+
+  .list {
+    grid-area: list;
+  }
+
+  .chart {
+    grid-area: chart;
+  }
+
+  .table {
+    grid-area: table;
+  }
 </style>
