@@ -1,9 +1,9 @@
 <template>
   <h1>Dashboard</h1>
   <Map />
-  <Table v-bind:data="data" />
+  <Table v-bind:data="data" v-bind:loadingState="loadingState" />
   <Chart />
-  <List  v-bind:data="data" v-bind:error="error" v-bind:loading="loading" />
+  <List  v-bind:data="data" v-bind:loadingState="loadingState" />
 </template>
 
 <script>
@@ -23,8 +23,10 @@ export default {
   },
   data() {
     return {
-      loading: false,
-      error: null,
+      loadingState: {
+        loading: false,
+        error: null,
+      },
       data: null,
       dataService: new DataService(),
     };
@@ -34,14 +36,14 @@ export default {
   },
   methods: {
     fetchData() {
-      this.loading = true;
+      this.loadingState.loading = true;
       this.dataService.init().then((res) => {
         this.data = res;
-        this.loading = false;
+        this.loadingState.loading = false;
+        console.log(this.data);
       }).catch((err) => {
-        this.error = err.toString();
-        this.loading = false;
-        throw new Error('Failed to fetch data on init', err);
+        this.loadingState.error = err.toString();
+        this.loadingState.loading = false;
       });
     },
   },

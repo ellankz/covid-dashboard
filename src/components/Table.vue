@@ -1,22 +1,27 @@
 <template>
   <h2>Table</h2>
-  <p>total: {{ data }}</p>
+   <div v-if="loadingState.loading" class="loading">
+      Loading...
+    </div>
+
+    <div v-if="loadingState.error" class="error">
+      {{ error }}
+    </div>
+
+    <div v-if="data" class="content">
+      <p>total: {{ data.Global.Summary.Total.Confirmed }}</p>
+    </div>
 </template>
 
 <script>
 export default {
   name: 'Table',
-  created() {
-    this.logData();
-  },
+  created() {},
   props: {
     data: Object,
+    loadingState: Object,
   },
-  methods: {
-    logData() {
-      console.log(this.data);
-    },
-  },
+  methods: {},
 };
 </script>
 
