@@ -1,34 +1,27 @@
 <template>
   <h2>List</h2>
-   <div v-if="loading" class="loading">
+   <div v-if="loadingState.loading" class="loading">
       Loading...
     </div>
 
-    <div v-if="error" class="error">
+    <div v-if="loadingState.error" class="error">
       {{ error }}
     </div>
 
     <div v-if="data" class="content">
-      <p>total: {{ data.Global.TotalConfirmed }}</p>
+      <p>total: {{ data.Global.Summary.Total.Confirmed }}</p>
     </div>
 </template>
 
 <script>
 export default {
   name: 'List',
-  created() {
-    this.logData();
-  },
+  created() {},
   props: {
     data: Object,
-    error: String,
-    loading: Boolean,
+    loadingState: Object,
   },
-  methods: {
-    logData() {
-      console.log(this.data);
-    },
-  },
+  methods: {},
 };
 </script>
 
