@@ -1,6 +1,7 @@
 <template>
-  <h2>List</h2>
-   <div v-if="loadingState.loading" class="loading">
+  <div>
+    <h2>List</h2>
+    <div v-if="loadingState.loading" class="loading">
       Loading...
     </div>
 
@@ -11,6 +12,7 @@
     <div v-if="data" class="content">
       <p>total: {{ data.Global.Summary.Total.Confirmed }}</p>
     </div>
+  </div>
 </template>
 
 <script>
