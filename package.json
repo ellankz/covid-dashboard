@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "leaflet": "^1.7.1",
+    "leaflet-providers": "^1.11.0",
     "lodash.keyby": "^4.6.0",
     "vue": "^3.0.0"
   },
