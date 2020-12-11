@@ -1,7 +1,11 @@
 <template>
   <h1>Dashboard</h1>
   <div class="dashboard">
-    <Map class="map dashboard__element" />
+    <Map
+      v-if="data"
+      class="map dashboard__element"
+      v-bind:data="data"
+      v-bind:loadingState="loadingState" />
     <Table class="table dashboard__element" v-bind:data="data" v-bind:loadingState="loadingState" />
     <Chart class="chart dashboard__element" />
     <List class="list dashboard__element"  v-bind:data="data" v-bind:loadingState="loadingState" />

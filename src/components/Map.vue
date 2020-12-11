@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h2>Map</h2>
     <div id="map-container"></div>
   </div>
 </template>
@@ -9,6 +8,7 @@
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import countries from '../service/geoCountries.json';
+// import countriesInfo from '../service/countries.json';
 
 export default {
   name: 'Map',
@@ -16,7 +16,12 @@ export default {
     return {
       map: null,
       tileLayer: null,
+      currentParameter: 'total',
     };
+  },
+  props: {
+    data: Object,
+    loadingState: Object,
   },
   mounted() {
     this.initMap();
@@ -46,21 +51,71 @@ export default {
           return {
             fillColor: 'transparent',
             fillOpacity: 1,
-            stroke: true,
+            stroke: false,
             color: 'grey',
             weight: 1,
           };
         },
+        // onEachFeature: (feature) => console.log(feature),
       }).bindPopup((layer) => layer.feature.properties.name).addTo(this.map);
+
+      this.map.eachLayer((layer) => {
+        if (layer.feature?.geometry) {
+          const center = layer.feature.id === 'RUS' ? { lat: 60.793196, lng: 92.003289 } : layer.getBounds().getCenter();
+          const size = this.getMarkerSize(layer.feature.id);
+          L.circle(center, {
+            radius: size, color: 'red', opacity: 0.8, weight: 1, interactive: false,
+          }).addTo(this.map);
+        }
+      });
+
+      this.map.eachLayer((layer) => {
+        if (layer.feature?.geometry) {
+          layer.on('mouseover', function () {
+            this.setStyle({
+              fillColor: 'grey',
+              color: 'white',
+            });
+          });
+          layer.on('mouseout', function () {
+            this.setStyle({
+              fillColor: 'transparent',
+              color: 'grey',
+            });
+          });
+        }
+      });
     },
     initLayers() {},
+    getMarkerSize(countryCode) {
+      if (!this.data.Countries[countryCode]) return 0;
+      let size = 0;
+      switch (this.currentParameter) {
+        case 'total': {
+          const num = this.data.Countries[countryCode].timeline.Summary.Total.Confirmed;
+          size = num / 10;
+          break;
+        }
+        default:
+          break;
+      }
+      return size;
+    },
   },
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
   #map-container {
     height: 40rem;
     width: 100%;
+  }
+  .leaflet-container {
+    background: $color-gray;
+    outline: 0;
+  }
+
+  .leaflet-pane > svg path.leaflet-interactive {
+     transition: fill .4s ease, stroke .4s ease;
   }
 </style>
