@@ -46,6 +46,7 @@ export default {
       }).catch((err) => {
         this.loadingState.error = err.toString();
         this.loadingState.loading = false;
+        throw err;
       });
     },
   },
