@@ -5,7 +5,8 @@
       v-if="data"
       class="map dashboard__element"
       v-bind:data="data"
-      v-bind:loadingState="loadingState" />
+      v-bind:loadingState="loadingState"
+      v-bind:state="state" />
     <Table class="table dashboard__element" v-bind:data="data" v-bind:loadingState="loadingState" />
     <Chart class="chart dashboard__element" />
     <List class="list dashboard__element"  v-bind:data="data" v-bind:loadingState="loadingState" />
@@ -35,6 +36,12 @@ export default {
       },
       data: null,
       dataService: new DataService(),
+      state: {
+        country: null,
+        type: 'Confirmed',
+        calcType: 'Per 100k',
+        period: 'All time',
+      },
     };
   },
   created() {
