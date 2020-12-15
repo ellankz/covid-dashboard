@@ -6,7 +6,11 @@
       class="map dashboard__element"
       v-bind:data="data"
       v-bind:loadingState="loadingState"
-      v-bind:state="state" />
+      v-bind:state="state"
+      @updateType="handleUpdateType"
+      @updateCalcType="handleUpdateCalcType"
+      @updatePeriod="handleUpdatePeriod"
+      @updateCountry="handleUpdateCountry" />
     <Table class="table dashboard__element" v-bind:data="data" v-bind:loadingState="loadingState" />
     <Chart class="chart dashboard__element" />
     <List class="list dashboard__element"  v-bind:data="data" v-bind:loadingState="loadingState" />
@@ -59,6 +63,19 @@ export default {
         this.loadingState.loading = false;
         throw err;
       });
+    },
+    handleUpdateType(newType) {
+      this.state.type = newType;
+    },
+
+    handleUpdateCalcType(newType) {
+      this.state.calcType = newType;
+    },
+    handleUpdatePeriod(newPeriod) {
+      this.state.period = newPeriod;
+    },
+    handleUpdateCountry(country) {
+      this.state.country = country.countryCode;
     },
   },
 };
