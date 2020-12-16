@@ -17,6 +17,9 @@
       v-bind:data="data"
       v-bind:loadingState="loadingState"
       v-bind:state="state"
+      @updateCalcType="handleUpdateCalcType"
+      @updatePeriod="handleUpdatePeriod"
+      @updateChartTypes="handleUpdateChartTypes"
       class="chart dashboard__element" />
     <List class="list dashboard__element"  v-bind:data="data" v-bind:loadingState="loadingState" />
   </div>
@@ -48,8 +51,9 @@ export default {
       state: {
         country: null,
         type: 'Confirmed',
-        calcType: 'Per 100k',
+        calcType: 'Total',
         period: 'All time',
+        chartTypes: ['Confirmed'],
       },
     };
   },
@@ -81,6 +85,9 @@ export default {
     },
     handleUpdateCountry(country) {
       this.state.country = country.countryCode;
+    },
+    handleUpdateChartTypes(types) {
+      this.state.chartTypes = types;
     },
   },
 };
