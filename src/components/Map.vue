@@ -47,8 +47,6 @@ export default {
   data() {
     return {
       map: null,
-      tileLayer: null,
-      currentParameter: 'total',
       parameterTypes: ['Confirmed', 'Deaths', 'Recovered'],
       currentType: this.state.type,
     };
