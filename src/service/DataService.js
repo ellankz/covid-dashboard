@@ -16,7 +16,6 @@ export class DataService {
   }
 
   async init() {
-    // DataService.convertCodes();
     await this.getStartData();
     return this.data;
   }
@@ -27,13 +26,9 @@ export class DataService {
       this.getHistoricalCountriesData(DAYS_NUMBER_TO_LOAD_AT_START),
       this.getHistoricalGlobalData(),
     ]);
+    // this is loaded in background and thus does not require await
+    this.getHistoricalCountriesData(DAYS_NUMBER_FROM_START).then(() => this.createSummary());
     this.createSummary();
-  }
-
-  async getCountryData(countryCode) {
-    await this.getHistoricalCountryData(countryCode);
-    this.createSummary(countryCode);
-    console.log(`data for ${countryCode} loaded`);
   }
 
   createSummary() {
@@ -99,37 +94,21 @@ export class DataService {
     this.data.Countries = keyBy(withCodes, 'code');
   }
 
-  async getHistoricalCountryData(countryCode) {
-    const res = await DataLoader.getHistoricalByCountry(countryCode, DAYS_NUMBER_FROM_START);
-    const country = { ...res, code: countryCode };
-    this.data.Countries[countryCode] = country;
+  getHistoricalDataPer100k(type, countryCode) {
+    const population = !countryCode
+      ? WORLD_POPULATION_WITH_STATS
+      : Number(this.countriesData[countryCode].population);
+    const coefPer100k = population / 100000;
+    let arr;
+    if (!countryCode) {
+      arr = Object.entries(this.data.Global[type]);
+    } else {
+      arr = Object.entries(this.data.Countries[countryCode].timeline[type]);
+    }
+    const res = arr.reduce((acc, dateData) => {
+      acc[dateData[0]] = dateData[1] / coefPer100k;
+      return acc;
+    }, {});
+    return res;
   }
-
-  // static convertCodes() {
-  //   const oldCountries = { ...countriesData };
-  //   const newCountries = {};
-  //   all.forEach((allCountry) => {
-  //     const obj = countriesData[allCountry['alpha-2']];
-  //     if (obj) {
-  //       // console.log(obj);
-  //       delete oldCountries[allCountry['alpha-2']];
-  //       const code = allCountry['alpha-3'];
-  //       obj.code = code;
-  //       newCountries[code] = obj;
-  //     }
-  //   });
-  //   console.log(geoCountries.features[0].id);
-
-  //   const oCountries = { ...countriesData };
-  //   const rest = {};
-  //   geoCountries.features.forEach((c) => {
-  //     if (oCountries[c.id]) {
-  //       delete oCountries[c.id];
-  //     } else {
-  //       rest[c.id] = c;
-  //     }
-  //   });
-  //   console.log(oCountries);
-  //   console.log(rest);
-  // }
 }

@@ -1,7 +1,27 @@
 <template>
   <div>
-    <h2>Chart</h2>
     <canvas id="chart-container"></canvas>
+    <div class="control">
+       <button
+        class="btn control__btn"
+        @click="$emit('updateCalcType', state.calcType === 'Total' ? 'Per 100k' : 'Total')">
+        {{ state.calcType === 'Total' ? 'Per 100k' : 'Total' }}
+      </button>
+      <button
+        class="btn control__btn"
+        @click="$emit('updatePeriod', state.period === 'All time' ? 'New' : 'All time')">
+        {{ state.period === 'All time' ? 'New' : 'All time' }}
+      </button>
+      <input type="checkbox" id="Confirmed" value="Confirmed" v-model="currentTypes"
+       @change="$emit('updateChartTypes', currentTypes)" >
+      <label for="Confirmed">Confirmed</label>
+      <input type="checkbox" id="Deaths" value="Deaths" v-model="currentTypes"
+       @change="$emit('updateChartTypes', currentTypes)" >
+      <label for="Deaths">Deaths</label>
+      <input type="checkbox" id="Recovered" value="Recovered" v-model="currentTypes"
+       @change="$emit('updateChartTypes', currentTypes)" >
+      <label for="Recovered">Recovered</label>
+    </div>
   </div>
 </template>
 
@@ -9,58 +29,27 @@
 import Chart from 'chart.js';
 import moment from 'moment';
 import { formatNumber } from '../helpers/formatNumber';
+import countries from '../service/countries.json';
 
 const COLOR_BLUE = '#0075ff';
+const COLOR_RED = 'red';
+const COLOR_GREEN = 'green';
 
 export default {
   name: 'Chart',
   data() {
     return {
       chart: null,
-      currentType: this.state.type,
-    };
-  },
-  props: {
-    data: Object,
-    loadingState: Object,
-    state: Object,
-  },
-  watch: {
-    state: {
-      handler() {
-        console.log(this.state);
-        this.updateChart();
-      },
-      deep: true,
-    },
-  },
-
-  mounted() {
-    this.createChart();
-  },
-  methods: {
-    createChart() {
-      const ctx = document.getElementById('chart-container').getContext('2d');
-      this.chart = new Chart(ctx, {
-        // The type of chart we want to create
+      types: ['Confirmed', 'Deaths', 'Recovered'],
+      currentTypes: this.state.chartTypes,
+      chartConfig: {
         type: 'line',
 
-        // The data for our dataset
         data: {
           labels: Object.keys(this.data.Global.cases),
-          datasets: [{
-            label: 'Total confirmed cases global',
-            backgroundColor: COLOR_BLUE,
-            borderColor: COLOR_BLUE,
-            data: Object.values(this.data.Global.cases),
-            borderWidth: 1,
-            fill: false,
-            pointRadius: 1,
-            pointHoverRadius: 1,
-          }],
+          datasets: [],
         },
 
-        // Configuration options go here
         options: {
           responsive: true,
           legend: {
@@ -73,8 +62,7 @@ export default {
             mode: 'label',
             callbacks: {
               title(text) {
-                // debugger;
-                return moment(text.xLabel).format('YYYY-MM-DD');
+                return moment(text[0].xLabel).format('DD-MM-YYYY');
               },
             },
           },
@@ -99,7 +87,7 @@ export default {
             xAxes: [{
               ticks: {
                 callback(label) {
-                  return moment(label).format('YYYY-MM-DD');
+                  return moment(label).format('DD-MM-YYYY');
                 },
                 fontColor: 'rgba(255, 255, 255, 0.8)',
               },
@@ -111,16 +99,75 @@ export default {
             ],
           },
         },
-      });
+      },
+    };
+  },
+  props: {
+    data: Object,
+    loadingState: Object,
+    state: Object,
+  },
+  watch: {
+    state: {
+      handler() {
+        this.updateChart();
+      },
+      deep: true,
+    },
+  },
+
+  mounted() {
+    this.createChart();
+  },
+  methods: {
+    createChart() {
+      const ctx = document.getElementById('chart-container').getContext('2d');
+      this.chart = new Chart(ctx, this.chartConfig);
+      this.addDefaultData();
+      this.chart.update();
     },
     updateChart() {
+      // debugger;
+      this.chartConfig.data.datasets = [];
+      this.currentTypes.forEach((type) => {
+        this.addChartData(type);
+      });
       this.chart.update();
+    },
+    addDefaultData() {
+      this.addChartData(this.state.type);
+    },
+    addChartData(type) {
+      let typePath = 'cases';
+      let color = COLOR_BLUE;
+      let dataPath = this.data.Global;
+      if (this.state.country) {
+        dataPath = this.data.Countries[this.state.country].timeline;
+      }
+      if (type === 'Deaths') {
+        typePath = 'deaths';
+        color = COLOR_RED;
+      }
+      if (type === 'Recovered') {
+        typePath = 'recovered';
+        color = COLOR_GREEN;
+      }
+      const region = this.state.country ? countries[this.state.country].name : 'Global';
+
+      this.chartConfig.data.datasets.push({
+        label: `${this.state.calcType} ${type} ${region}`,
+        backgroundColor: color,
+        borderColor: color,
+        data: Object.values(dataPath[typePath]),
+        borderWidth: 1,
+        fill: false,
+        pointRadius: 1,
+        pointHoverRadius: 1,
+      });
     },
   },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-
 </style>
