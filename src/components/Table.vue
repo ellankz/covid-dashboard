@@ -1,41 +1,39 @@
 <template>
   <div class="container">
-  <div class="options">
-    <div class="switches">
+    <div class="options">
+      <div class="location">{{ world }}</div>
+      <div class="switches">
       <div class="all-time">
-        <button @click = "getLastDayData(event)">{{btnLastDayText}}</button>
+        <button class="btn" @click = "getLastDayData(event)">{{btnLastDayText}}</button>
       </div>
       <div class="absolute">
-        <button @click = "getDataBy100k(event)">{{ btn100kText}}</button>
+        <button class="btn" @click = "getDataBy100k(event)">{{ btn100kText}}</button>
+      </div>
       </div>
     </div>
-    <div class="location">{{ world }}</div>
-  </div>
-   <table>
-    <tr class="totals">
-      <td class="total-cases">
-        <span >Total cases:</span><br>
-        <span v-if ="!isLastDay && !is100k">{{ total.Confirmed }}</span>
-        <span v-else-if ="isLastDay && !is100k">{{lastDay.Confirmed}}</span>
+    <div class="table">
+      <div class="total total-cases">
+        <div class="title">Total cases:</div>
+        <span v-if ="!isLastDay && !is100k">{{ total.Confirmed.toLocaleString() }}</span>
+        <span v-else-if ="isLastDay && !is100k">+{{lastDay.Confirmed.toLocaleString()}}</span>
         <span v-else-if ="is100k && !isLastDay">{{ dataBy100k.Confirmed.toFixed(2)}}</span>
         <span v-else>{{ lastDayBy100k.Confirmed.toFixed(2)}}</span>
-      </td>
-      <td class="total-deaths">
-        <span>Total deaths:</span><br>
-        <span v-if ="!isLastDay && !is100k">{{ total.Deaths }}</span>
-        <span v-else-if ="isLastDay && !is100k">{{lastDay.Deaths}}</span>
+      </div>
+      <div class="total total-deaths">
+        <div class="title">Total deaths:</div>
+        <span v-if ="!isLastDay && !is100k">{{ total.Deaths.toLocaleString() }}</span>
+        <span v-else-if ="isLastDay && !is100k">+{{lastDay.Deaths.toLocaleString()}}</span>
         <span v-else-if ="is100k && !isLastDay">{{ dataBy100k.Deaths.toFixed(2)}}</span>
         <span v-else>{{lastDayBy100k.Deaths.toFixed(2)}}</span>
-      </td>
-      <td class="total-recovered">
-       <span>Total recovered:</span><br>
-       <span v-if ="!isLastDay && !is100k">{{ total.Recovered }}</span>
-       <span v-else-if ="isLastDay && !is100k">{{lastDay.Recovered}}</span>
+      </div>
+      <div class="total total-recovered">
+       <div class="title">Total recovered:</div>
+       <span v-if ="!isLastDay && !is100k">{{ total.Recovered.toLocaleString() }}</span>
+       <span v-else-if ="isLastDay && !is100k">+{{lastDay.Recovered.toLocaleString()}}</span>
        <span v-else-if ="is100k && !isLastDay">{{ dataBy100k.Recovered.toFixed(2)}}</span>
        <span v-else>{{ lastDayBy100k.Recovered.toFixed(2)}}</span>
-      </td>
-    </tr>
-   </table>
+      </div>
+    </div>
   <!-- <p>total: </p> -->
   </div>
   {{data}}
@@ -45,7 +43,7 @@
 export default {
   name: 'Table',
   created() {
-    //this.logData();
+    this.logData();
   },
   props: {
     data: Object,
@@ -95,7 +93,7 @@ export default {
     getDataBy100k() {
       this.is100k = !this.is100k;
       if (!this.is100k) this.btn100kText = 'Absolute';
-      else this.btn100kText = 'Case/100k';
+      else this.btn100kText = 'Per 100k';
     },
   },
 };
@@ -103,26 +101,22 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-$colorBg: #222222;
-$colorBorder: #4D4D4D;
-$colorRecoveredText: #72A603;
-$colorRed: #BF0A0A;
-$colorDeath: #67676C;
-$colorText: #E0E0E0;
-$colorRecovered: #3B7E09;
 
 .container {
-  display: inline-block;
-  background-color: #54575c;
+  //background-color: #54575c;
+  background-color: $color-gray;
   color: #fff;
   border-radius: 5px;
   padding: 10px;
-  text-align: center;
 }
 
 .options {
   display: flex;
-  align-items: center;
+  justify-content: space-around;
+  align-items: baseline;
+  margin-bottom: 15px;
+}
+.title {
   margin-bottom: 5px;
 }
 
@@ -135,9 +129,12 @@ $colorRecovered: #3B7E09;
   }
 }
 
-.totals td {
-  border-bottom: 1px solid grey;
-  padding: 5px;
+.table {
+  display: flex;
+  justify-content: space-around;
+}
+
+.total {
 }
 .all-time {
   button {
