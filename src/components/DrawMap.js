@@ -29,6 +29,7 @@ export class DrawMap {
   init() {
     if (!this.map) {
       this.map = L.map('map-container', {
+        worldCopyJump: true,
         minZoom: 2,
         maxZoom: 7,
       }).setView(MAP_CENTER, MAP_ZOOM_CENTER);
