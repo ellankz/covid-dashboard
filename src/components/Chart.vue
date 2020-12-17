@@ -46,7 +46,7 @@ export default {
         type: 'line',
 
         data: {
-          labels: Object.keys(this.data.Global.cases),
+          labels: Object.keys(this.data.Global.Confirmed),
           datasets: [],
         },
 
@@ -127,7 +127,6 @@ export default {
       this.chart.update();
     },
     updateChart() {
-      // debugger;
       this.chartConfig.data.datasets = [];
       this.currentTypes.forEach((type) => {
         this.addChartData(type);
@@ -138,27 +137,31 @@ export default {
       this.addChartData(this.state.type);
     },
     addChartData(type) {
-      let typePath = 'cases';
       let color = COLOR_BLUE;
       let dataPath = this.data.Global;
       if (this.state.country) {
         dataPath = this.data.Countries[this.state.country].timeline;
       }
+      if (this.state.calcType === 'Per 100k' && this.state.period === 'New') {
+        dataPath = dataPath['New Per 100k'];
+      } else if (this.state.calcType === 'Per 100k') {
+        dataPath = dataPath['Per 100k'];
+      } else if (this.state.period === 'New') {
+        dataPath = dataPath.New;
+      }
       if (type === 'Deaths') {
-        typePath = 'deaths';
         color = COLOR_RED;
       }
       if (type === 'Recovered') {
-        typePath = 'recovered';
         color = COLOR_GREEN;
       }
       const region = this.state.country ? countries[this.state.country].name : 'Global';
 
       this.chartConfig.data.datasets.push({
-        label: `${this.state.calcType} ${type} ${region}`,
+        label: `${this.state.calcType} ${type} ${this.state.period} ${region}`,
         backgroundColor: color,
         borderColor: color,
-        data: Object.values(dataPath[typePath]),
+        data: Object.values(dataPath[type]),
         borderWidth: 1,
         fill: false,
         pointRadius: 1,

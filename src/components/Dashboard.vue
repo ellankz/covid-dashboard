@@ -32,6 +32,10 @@ import List from './List.vue';
 import Table from './Table.vue';
 import Chart from './Chart.vue';
 
+const TYPES = ['Confirmed', 'Deaths', 'Recovered'];
+// const PERIODS = ['All time', 'New'];
+// const CALC_TYPES = ['Total', 'Per 100k'];
+
 export default {
   name: 'Dashboard',
   components: {
@@ -75,19 +79,55 @@ export default {
     },
     handleUpdateType(newType) {
       this.state.type = newType;
+      this.addChartDataForState();
     },
 
     handleUpdateCalcType(newType) {
       this.state.calcType = newType;
+      this.addChartDataForState();
     },
     handleUpdatePeriod(newPeriod) {
       this.state.period = newPeriod;
+      this.addChartDataForState();
     },
     handleUpdateCountry(country) {
       this.state.country = country.countryCode;
+      this.addChartDataForState();
     },
     handleUpdateChartTypes(types) {
       this.state.chartTypes = types;
+      this.addChartDataForState();
+    },
+    addChartDataForState() {
+      let dataPath = this.data.Global;
+      if (this.state.country) {
+        dataPath = this.data.Countries[this.state.country].timeline;
+      }
+      if (this.state.calcType === 'Per 100k' && this.state.period === 'New') {
+        const newData = TYPES.reduce((acc, type) => {
+          acc[type] = this.dataService.getHistoricalDataForEachDayPer100k(
+            type, this.state.country,
+          );
+          return acc;
+        }, {});
+        dataPath['New Per 100k'] = newData;
+      } else if (this.state.calcType === 'Per 100k') {
+        const newData = TYPES.reduce((acc, type) => {
+          acc[type] = this.dataService.getHistoricalDataPer100k(
+            type, this.state.country,
+          );
+          return acc;
+        }, {});
+        dataPath['Per 100k'] = newData;
+      } else if (this.state.period === 'New') {
+        const newData = TYPES.reduce((acc, type) => {
+          acc[type] = this.dataService.getHistoricalDataForEachDay(
+            type, this.state.country,
+          );
+          return acc;
+        }, {});
+        dataPath.New = newData;
+      }
     },
   },
 };
