@@ -11,7 +11,7 @@
       </div>
       </div>
     </div>
-    <div class="table">
+    <div class="inner-table">
       <div class="total total-cases">
         <div class="title">Total cases:</div>
         <span v-if ="!isLastDay && !is100k">{{ total.Confirmed.toLocaleString() }}</span>
@@ -102,7 +102,6 @@ export default {
 <style scoped lang="scss">
 
 .container {
-  //background-color: #54575c;
   background-color: $color-gray;
   color: #fff;
   border-radius: 5px;
@@ -128,7 +127,7 @@ export default {
   }
 }
 
-.table {
+.inner-table {
   display: flex;
   justify-content: space-around;
 }
