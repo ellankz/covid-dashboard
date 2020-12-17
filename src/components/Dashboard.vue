@@ -91,7 +91,11 @@ export default {
       this.addChartDataForState();
     },
     handleUpdateCountry(country) {
-      this.state.country = country.countryCode;
+      if (this.dataService.hasCountryData(country.countryCode)) {
+        this.state.country = country.countryCode;
+      } else {
+        this.state.country = null;
+      }
       this.addChartDataForState();
     },
     handleUpdateChartTypes(types) {
