@@ -78,9 +78,18 @@ export class DataService {
 
   async getHistoricalGlobalData() {
     const res = await DataLoader.getHistoricalGlobal();
-    this.data.Global.Confirmed = res.cases;
-    this.data.Global.Deaths = res.deaths;
-    this.data.Global.Recovered = res.recovered;
+    this.data.Global.Confirmed = DataService.fixDataBugs(res.cases);
+    this.data.Global.Deaths = DataService.fixDataBugs(res.deaths);
+    this.data.Global.Recovered = DataService.fixDataBugs(res.recovered);
+  }
+
+  static fixDataBugs(dataObj) {
+    const res = Object.entries(dataObj).sort((a, b) => a[1] - b[1]).reduce((acc, day) => {
+      // eslint-disable-next-line prefer-destructuring
+      acc[day[0]] = day[1];
+      return acc;
+    }, {});
+    return res;
   }
 
   async getHistoricalCountriesData(numberOfDays) {
@@ -91,11 +100,11 @@ export class DataService {
       const countryInfo = countryInfoArr.find((info) => info.name === item.country);
       const { code } = countryInfo;
       const itemWithCode = { ...item, code };
-      itemWithCode.timeline.Confirmed = itemWithCode.timeline.cases;
+      itemWithCode.timeline.Confirmed = DataService.fixDataBugs(itemWithCode.timeline.cases);
       delete itemWithCode.timeline.cases;
-      itemWithCode.timeline.Deaths = itemWithCode.timeline.deaths;
+      itemWithCode.timeline.Deaths = DataService.fixDataBugs(itemWithCode.timeline.deaths);
       delete itemWithCode.timeline.deaths;
-      itemWithCode.timeline.Recovered = itemWithCode.timeline.recovered;
+      itemWithCode.timeline.Recovered = DataService.fixDataBugs(itemWithCode.timeline.recovered);
       delete itemWithCode.timeline.recovered;
       return itemWithCode;
     });
@@ -154,5 +163,9 @@ export class DataService {
       return acc;
     }, {});
     return res;
+  }
+
+  hasCountryData(countryCode) {
+    return !!this.data.Countries[countryCode];
   }
 }
