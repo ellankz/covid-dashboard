@@ -50,9 +50,9 @@ export class DataService {
   static calculateSummaryData(dataObject, population) {
     const coefPer100k = population / 100000;
     const summary = {};
-    const arrayCases = Object.values(dataObject.cases).sort((a, b) => b - a);
-    const arrayDeaths = Object.values(dataObject.deaths).sort((a, b) => b - a);
-    const arrayRecvr = Object.values(dataObject.recovered).sort((a, b) => b - a);
+    const arrayCases = Object.values(dataObject.Confirmed).sort((a, b) => b - a);
+    const arrayDeaths = Object.values(dataObject.Deaths).sort((a, b) => b - a);
+    const arrayRecvr = Object.values(dataObject.Recovered).sort((a, b) => b - a);
     summary.New = {
       Confirmed: arrayCases[0] - arrayCases[1],
       Deaths: arrayDeaths[0] - arrayDeaths[1],
@@ -78,35 +78,79 @@ export class DataService {
 
   async getHistoricalGlobalData() {
     const res = await DataLoader.getHistoricalGlobal();
-    this.data.Global = res;
+    this.data.Global.Confirmed = res.cases;
+    this.data.Global.Deaths = res.deaths;
+    this.data.Global.Recovered = res.recovered;
   }
 
   async getHistoricalCountriesData(numberOfDays) {
     const res = await DataLoader.getHistoricalAllCountries(numberOfDays);
     const filtered = res.filter((item) => item && item.country);
+    const countryInfoArr = Object.values(this.countriesData);
     const withCodes = filtered.map((item) => {
-      const countryInfoArr = Object.values(this.countriesData);
       const countryInfo = countryInfoArr.find((info) => info.name === item.country);
       const { code } = countryInfo;
       const itemWithCode = { ...item, code };
+      itemWithCode.timeline.Confirmed = itemWithCode.timeline.cases;
+      delete itemWithCode.timeline.cases;
+      itemWithCode.timeline.Deaths = itemWithCode.timeline.deaths;
+      delete itemWithCode.timeline.deaths;
+      itemWithCode.timeline.Recovered = itemWithCode.timeline.recovered;
+      delete itemWithCode.timeline.recovered;
       return itemWithCode;
     });
     this.data.Countries = keyBy(withCodes, 'code');
   }
 
-  getHistoricalDataPer100k(type, countryCode) {
+  getCoefPer100k(countryCode) {
     const population = !countryCode
       ? WORLD_POPULATION_WITH_STATS
       : Number(this.countriesData[countryCode].population);
-    const coefPer100k = population / 100000;
+    return population / 100000;
+  }
+
+  getSavedDataByCountry(type, countryCode) {
     let arr;
     if (!countryCode) {
       arr = Object.entries(this.data.Global[type]);
     } else {
       arr = Object.entries(this.data.Countries[countryCode].timeline[type]);
     }
+    return arr;
+  }
+
+  getHistoricalDataPer100k(type, countryCode) {
+    const coefPer100k = this.getCoefPer100k(countryCode);
+    const arr = this.getSavedDataByCountry(type, countryCode);
     const res = arr.reduce((acc, dateData) => {
-      acc[dateData[0]] = dateData[1] / coefPer100k;
+      const num = dateData[1] / coefPer100k;
+      acc[dateData[0]] = Math.round(num * 1000) / 1000;
+      return acc;
+    }, {});
+    return res;
+  }
+
+  getHistoricalDataForEachDay(type, countryCode) {
+    const arr = this.getSavedDataByCountry(type, countryCode);
+    const res = arr.reduce((acc, dateData, index) => {
+      if (index === 0) {
+        // eslint-disable-next-line prefer-destructuring
+        acc[dateData[0]] = dateData[1];
+      } else {
+        const dayCases = dateData[1] - arr[index - 1][1];
+        acc[dateData[0]] = dayCases;
+      }
+      return acc;
+    }, {});
+    return res;
+  }
+
+  getHistoricalDataForEachDayPer100k(type, countryCode) {
+    const coefPer100k = this.getCoefPer100k(countryCode);
+    const eachDayObj = this.getHistoricalDataForEachDay(type, countryCode);
+    const res = Object.entries(eachDayObj).reduce((acc, dateData) => {
+      const num = dateData[1] / coefPer100k;
+      acc[dateData[0]] = Math.round(num * 1000) / 1000;
       return acc;
     }, {});
     return res;
