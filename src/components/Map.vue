@@ -13,27 +13,13 @@
       </div>
       <button
         class="btn control__btn"
-        v-show="state.calcType === 'Per 100k'"
-        @click="$emit('updateCalcType', 'Total')">
-        Total
+        @click="$emit('updateCalcType', state.calcType === 'Total' ? 'Per 100k' : 'Total')">
+        {{ state.calcType === 'Total' ? 'Per 100k' : 'Total' }}
       </button>
       <button
         class="btn control__btn"
-        v-show="state.calcType === 'Total'"
-        @click="$emit('updateCalcType', 'Per 100k')">
-        Per 100k
-      </button>
-      <button
-        class="btn control__btn"
-        v-show="state.period === 'All time'"
-        @click="$emit('updatePeriod', 'New')">
-        New
-      </button>
-      <button
-        class="btn control__btn"
-        v-show="state.period === 'New'"
-        @click="$emit('updatePeriod', 'All time')">
-        All time
+        @click="$emit('updatePeriod', state.period === 'All time' ? 'New' : 'All time')">
+        {{ state.period === 'All time' ? 'New' : 'All time' }}
       </button>
     </div>
   </div>
@@ -47,8 +33,6 @@ export default {
   data() {
     return {
       map: null,
-      tileLayer: null,
-      currentParameter: 'total',
       parameterTypes: ['Confirmed', 'Deaths', 'Recovered'],
       currentType: this.state.type,
     };

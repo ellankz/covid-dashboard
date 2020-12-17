@@ -16,7 +16,6 @@ export class DataService {
   }
 
   async init() {
-    // DataService.convertCodes();
     await this.getStartData();
     return this.data;
   }
@@ -27,13 +26,9 @@ export class DataService {
       this.getHistoricalCountriesData(DAYS_NUMBER_TO_LOAD_AT_START),
       this.getHistoricalGlobalData(),
     ]);
+    // this is loaded in background and thus does not require await
+    this.getHistoricalCountriesData(DAYS_NUMBER_FROM_START).then(() => this.createSummary());
     this.createSummary();
-  }
-
-  async getCountryData(countryCode) {
-    await this.getHistoricalCountryData(countryCode);
-    this.createSummary(countryCode);
-    console.log(`data for ${countryCode} loaded`);
   }
 
   createSummary() {
@@ -55,9 +50,9 @@ export class DataService {
   static calculateSummaryData(dataObject, population) {
     const coefPer100k = population / 100000;
     const summary = {};
-    const arrayCases = Object.values(dataObject.cases).sort((a, b) => b - a);
-    const arrayDeaths = Object.values(dataObject.deaths).sort((a, b) => b - a);
-    const arrayRecvr = Object.values(dataObject.recovered).sort((a, b) => b - a);
+    const arrayCases = Object.values(dataObject.Confirmed).sort((a, b) => b - a);
+    const arrayDeaths = Object.values(dataObject.Deaths).sort((a, b) => b - a);
+    const arrayRecvr = Object.values(dataObject.Recovered).sort((a, b) => b - a);
     summary.New = {
       Confirmed: arrayCases[0] - arrayCases[1],
       Deaths: arrayDeaths[0] - arrayDeaths[1],
@@ -83,53 +78,94 @@ export class DataService {
 
   async getHistoricalGlobalData() {
     const res = await DataLoader.getHistoricalGlobal();
-    this.data.Global = res;
+    this.data.Global.Confirmed = DataService.fixDataBugs(res.cases);
+    this.data.Global.Deaths = DataService.fixDataBugs(res.deaths);
+    this.data.Global.Recovered = DataService.fixDataBugs(res.recovered);
+  }
+
+  static fixDataBugs(dataObj) {
+    const res = Object.entries(dataObj).sort((a, b) => a[1] - b[1]).reduce((acc, day) => {
+      // eslint-disable-next-line prefer-destructuring
+      acc[day[0]] = day[1];
+      return acc;
+    }, {});
+    return res;
   }
 
   async getHistoricalCountriesData(numberOfDays) {
     const res = await DataLoader.getHistoricalAllCountries(numberOfDays);
     const filtered = res.filter((item) => item && item.country);
+    const countryInfoArr = Object.values(this.countriesData);
     const withCodes = filtered.map((item) => {
-      const countryInfoArr = Object.values(this.countriesData);
       const countryInfo = countryInfoArr.find((info) => info.name === item.country);
       const { code } = countryInfo;
       const itemWithCode = { ...item, code };
+      itemWithCode.timeline.Confirmed = DataService.fixDataBugs(itemWithCode.timeline.cases);
+      delete itemWithCode.timeline.cases;
+      itemWithCode.timeline.Deaths = DataService.fixDataBugs(itemWithCode.timeline.deaths);
+      delete itemWithCode.timeline.deaths;
+      itemWithCode.timeline.Recovered = DataService.fixDataBugs(itemWithCode.timeline.recovered);
+      delete itemWithCode.timeline.recovered;
       return itemWithCode;
     });
     this.data.Countries = keyBy(withCodes, 'code');
   }
 
-  async getHistoricalCountryData(countryCode) {
-    const res = await DataLoader.getHistoricalByCountry(countryCode, DAYS_NUMBER_FROM_START);
-    const country = { ...res, code: countryCode };
-    this.data.Countries[countryCode] = country;
+  getCoefPer100k(countryCode) {
+    const population = !countryCode
+      ? WORLD_POPULATION_WITH_STATS
+      : Number(this.countriesData[countryCode].population);
+    return population / 100000;
   }
 
-  // static convertCodes() {
-  //   const oldCountries = { ...countriesData };
-  //   const newCountries = {};
-  //   all.forEach((allCountry) => {
-  //     const obj = countriesData[allCountry['alpha-2']];
-  //     if (obj) {
-  //       // console.log(obj);
-  //       delete oldCountries[allCountry['alpha-2']];
-  //       const code = allCountry['alpha-3'];
-  //       obj.code = code;
-  //       newCountries[code] = obj;
-  //     }
-  //   });
-  //   console.log(geoCountries.features[0].id);
+  getSavedDataByCountry(type, countryCode) {
+    let arr;
+    if (!countryCode) {
+      arr = Object.entries(this.data.Global[type]);
+    } else {
+      arr = Object.entries(this.data.Countries[countryCode].timeline[type]);
+    }
+    return arr;
+  }
 
-  //   const oCountries = { ...countriesData };
-  //   const rest = {};
-  //   geoCountries.features.forEach((c) => {
-  //     if (oCountries[c.id]) {
-  //       delete oCountries[c.id];
-  //     } else {
-  //       rest[c.id] = c;
-  //     }
-  //   });
-  //   console.log(oCountries);
-  //   console.log(rest);
-  // }
+  getHistoricalDataPer100k(type, countryCode) {
+    const coefPer100k = this.getCoefPer100k(countryCode);
+    const arr = this.getSavedDataByCountry(type, countryCode);
+    const res = arr.reduce((acc, dateData) => {
+      const num = dateData[1] / coefPer100k;
+      acc[dateData[0]] = Math.round(num * 1000) / 1000;
+      return acc;
+    }, {});
+    return res;
+  }
+
+  getHistoricalDataForEachDay(type, countryCode) {
+    const arr = this.getSavedDataByCountry(type, countryCode);
+    const res = arr.reduce((acc, dateData, index) => {
+      if (index === 0) {
+        // eslint-disable-next-line prefer-destructuring
+        acc[dateData[0]] = dateData[1];
+      } else {
+        const dayCases = dateData[1] - arr[index - 1][1];
+        acc[dateData[0]] = dayCases;
+      }
+      return acc;
+    }, {});
+    return res;
+  }
+
+  getHistoricalDataForEachDayPer100k(type, countryCode) {
+    const coefPer100k = this.getCoefPer100k(countryCode);
+    const eachDayObj = this.getHistoricalDataForEachDay(type, countryCode);
+    const res = Object.entries(eachDayObj).reduce((acc, dateData) => {
+      const num = dateData[1] / coefPer100k;
+      acc[dateData[0]] = Math.round(num * 1000) / 1000;
+      return acc;
+    }, {});
+    return res;
+  }
+
+  hasCountryData(countryCode) {
+    return !!this.data.Countries[countryCode];
+  }
 }
