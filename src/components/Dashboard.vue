@@ -1,5 +1,5 @@
 <template>
-  <h1>Dashboard</h1>
+  <h1>Covid-19 Tracking Dashboard</h1>
   <div class="dashboard">
     <Map
       v-if="data"
@@ -155,10 +155,11 @@ export default {
 <style scoped lang="scss">
   .dashboard {
     display: grid;
-    grid-template-areas: "list map table"
-                         "list  map chart";
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: 1fr 4fr 2fr;
+    grid-template-areas: "map table"
+                         "map chart"
+                         "map list";
+    grid-template-rows: 0.5fr 1fr 1fr;
+    grid-template-columns: 5fr 2fr;
     grid-gap: 0.5rem;
 
     &__element {

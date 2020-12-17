@@ -72,7 +72,7 @@ export default {
 
 <style lang="scss">
   #map-container {
-    height: 40rem;
+    height: 84vh;
     width: 100%;
   }
   .leaflet-container {
