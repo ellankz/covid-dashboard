@@ -9,22 +9,12 @@
       @updateType="handleUpdateType"
       @updateCalcType="handleUpdateCalcType"
       @updatePeriod="handleUpdatePeriod"
-      @updateCountry="handleUpdateCountry"
-      class="map dashboard__element" />
-    <Table
-      v-if="data"
-      class="table dashboard__element"
-      v-bind:data="data"
-      v-bind:loadingState="loadingState" />
-    <Chart
-      v-if="data"
+      @updateCountry="handleUpdateCountry" />
+    <Table class="table dashboard__element"
       v-bind:data="data"
       v-bind:loadingState="loadingState"
-      v-bind:state="state"
-      @updateCalcType="handleUpdateCalcType"
-      @updatePeriod="handleUpdatePeriod"
-      @updateChartTypes="handleUpdateChartTypes"
-      class="chart dashboard__element" />
+      v-bind:state="state" />
+    <Chart class="chart dashboard__element" />
     <List class="list dashboard__element"  v-bind:data="data" v-bind:loadingState="loadingState" />
   </div>
 </template>
