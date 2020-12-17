@@ -36,7 +36,6 @@
     </div>
   <!-- <p>total: </p> -->
   </div>
-  {{data}}
 </template>
 
 <script>

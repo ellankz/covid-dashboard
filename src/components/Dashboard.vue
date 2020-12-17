@@ -11,7 +11,11 @@
       @updatePeriod="handleUpdatePeriod"
       @updateCountry="handleUpdateCountry"
       class="map dashboard__element" />
-    <Table class="table dashboard__element" v-bind:data="data" v-bind:loadingState="loadingState" />
+    <Table
+      v-if="data"
+      class="table dashboard__element"
+      v-bind:data="data"
+      v-bind:loadingState="loadingState" />
     <Chart
       v-if="data"
       v-bind:data="data"
