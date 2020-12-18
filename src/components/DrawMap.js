@@ -108,12 +108,12 @@ export class DrawMap {
     if (numberOfCases > scale[3]) return mapColors[4];
     if (numberOfCases > scale[2]) return mapColors[3];
     if (numberOfCases > scale[1]) return mapColors[2];
-    if (numberOfCases >= scale[0]) return mapColors[1];
+    if (numberOfCases > scale[0]) return mapColors[1];
     return mapColors[0];
   }
 
   getColorByCountry(countryCode) {
-    if (!this.data.Countries[countryCode]) return DrawMap.getColor(undefined, this.scale);
+    if (!this.data.Countries[countryCode]) return DrawMap.getColor(0, this.scale);
     const path = this.findPathByState();
     const rawNum = this.data.Countries[countryCode].timeline.Summary[path][this.state.type];
     const number = DrawMap.getCasesNumber(rawNum);
@@ -180,10 +180,9 @@ export class DrawMap {
 
   createPopupContent(countryCode, countryName) {
     const path = this.findPathByState();
-    const number = this.data.Countries[countryCode]?.timeline.Summary[path][this.state.type];
-    const casesText = (number !== undefined)
-      ? `${number > 1 ? Math.round(number) : Math.round(number * 100) / 100} cases`
-      : 'No data for this country';
+    const number = this.data.Countries[countryCode]?.timeline.Summary[path][this.state.type]
+                    || 0;
+    const casesText = number ? `${number > 1 ? Math.round(number) : Math.round(number * 100) / 100} cases` : 'No data for this country';
     return `<h4>${countryName}</h4>${this.state.period} ${this.state.type} ${this.state.calcType}:<br>${casesText}`;
   }
 

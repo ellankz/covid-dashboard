@@ -9,8 +9,10 @@
       @updateType="handleUpdateType"
       @updateCalcType="handleUpdateCalcType"
       @updatePeriod="handleUpdatePeriod"
-      @updateCountry="handleUpdateCountry" />
-    <Table class="table dashboard__element"
+      @updateCountry="handleUpdateCountry"
+      class="map dashboard__element" />
+    <Table
+      class="table dashboard__element"
       v-if="data"
       v-bind:data="data"
       v-bind:loadingState="loadingState"
