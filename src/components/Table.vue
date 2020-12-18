@@ -42,8 +42,6 @@
 </template>
 
 <script>
-import flagsCountries from '../service/countries.json';
-
 export default {
   name: 'Table',
   created() {
@@ -58,13 +56,8 @@ export default {
       country: 'World',
       btnLastDayText: 'All time',
       btn100kText: 'Total',
-      total: this.data.Global.Summary.Total,
-      lastDay: this.data.Global.Summary.New,
-      totalBy100k: this.data.Global.Summary.TotalPer100k,
-      lastDayBy100k: this.data.Global.Summary.NewPer100k,
       isLastDay: false,
       is100k: false,
-      flags: flagsCountries,
     };
   },
   computed: {
@@ -76,25 +69,20 @@ export default {
       return this.data.Countries[this.state.country].country;
     },
     getTotal() {
-      if (this.state.country === null) return this.total;
+      if (this.state.country === null) return this.data.Global.Summary.Total;
       return this.data.Countries[this.state.country].timeline.Summary.Total;
     },
     getTotalBy100k() {
-      if (this.state.country === null) return this.total;
+      if (this.state.country === null) return this.this.data.Global.Summary.TotalPer100k;
       return this.data.Countries[this.state.country].timeline.Summary.TotalPer100k;
     },
     getLastDayData() {
-      if (this.state.country === null) return this.lastDay;
+      if (this.state.country === null) return this.data.Global.Summary.New;
       return this.data.Countries[this.state.country].timeline.Summary.New;
     },
     getLastDayBy100k() {
-      if (this.state.country === null) return this.lastDayBy100k;
+      if (this.state.country === null) return this.data.Global.Summary.NewPer100k;
       return this.data.Countries[this.state.country].timeline.Summary.NewPer100k;
-    },
-  },
-  watch: {
-    state: {
-      deep: true,
     },
   },
   methods: {
