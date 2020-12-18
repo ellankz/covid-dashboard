@@ -22,7 +22,7 @@
         <span v-else-if ="getStateBtn('New', 'Total')">
           +{{ getLastDayData.Confirmed.toLocaleString() }}
         </span>
-        <span v-else-if ="getStateBtn('All-time', 'Per 100k')">
+        <span v-else-if ="getStateBtn('All time', 'Per 100k')">
           {{ getTotalBy100k.Confirmed.toFixed(2) }}</span>
         <span v-else>
           {{ getLastDayBy100k.Confirmed.toFixed(2) }}
@@ -36,7 +36,7 @@
         <span v-else-if ="getStateBtn('New', 'Total')">
           +{{ getLastDayData.Deaths.toLocaleString() }}
         </span>
-        <span v-else-if ="getStateBtn('All-time', 'Per 100k')">
+        <span v-else-if ="getStateBtn('All time', 'Per 100k')">
           {{ getTotalBy100k.Deaths.toFixed(2) }}
         </span>
         <span v-else>
@@ -51,7 +51,7 @@
        <span v-else-if ="getStateBtn('New', 'Total')">
         +{{ getLastDayData.Recovered.toLocaleString() }}
        </span>
-       <span v-else-if ="getStateBtn('All-time', 'Per 100k')">
+       <span v-else-if ="getStateBtn('All time', 'Per 100k')">
         {{ getTotalBy100k.Recovered.toFixed(2) }}
        </span>
        <span v-else>
@@ -75,10 +75,6 @@ export default {
   data() {
     return {
       country: 'World',
-      btnLastDayText: 'New',
-      btn100kText: 'Per 100k',
-      isLastDay: false,
-      is100k: false,
     };
   },
   computed: {
@@ -120,7 +116,7 @@ export default {
       this.$emit('updateCalcType', this.state.calcType === 'Total' ? 'Per 100k' : 'Total');
     },
     getStateBtn(period, value) {
-      return this.state.period === period && this.state.calcType === value;
+      return (this.state.period === period) && (this.state.calcType === value);
     },
   },
 };
