@@ -6,7 +6,7 @@
     </div>
 
     <div v-if="loadingState.error" class="error">
-      {{ error }}
+      {{ loadingState.error }}
     </div>
 
     <div v-if="data" class="content">

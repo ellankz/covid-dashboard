@@ -168,4 +168,36 @@ export class DataService {
   hasCountryData(countryCode) {
     return !!this.data.Countries[countryCode];
   }
+
+  addChartDataForState(state, TYPES) {
+    let dataPath = this.data.Global;
+    if (state.country) {
+      dataPath = this.data.Countries[state.country].timeline;
+    }
+    if (state.calcType === 'Per 100k' && state.period === 'New') {
+      const newData = TYPES.reduce((acc, type) => {
+        acc[type] = this.getHistoricalDataForEachDayPer100k(
+          type, state.country,
+        );
+        return acc;
+      }, {});
+      dataPath['New Per 100k'] = newData;
+    } else if (state.calcType === 'Per 100k') {
+      const newData = TYPES.reduce((acc, type) => {
+        acc[type] = this.getHistoricalDataPer100k(
+          type, state.country,
+        );
+        return acc;
+      }, {});
+      dataPath['Per 100k'] = newData;
+    } else if (state.period === 'New') {
+      const newData = TYPES.reduce((acc, type) => {
+        acc[type] = this.getHistoricalDataForEachDay(
+          type, state.country,
+        );
+        return acc;
+      }, {});
+      dataPath.New = newData;
+    }
+  }
 }

@@ -71,7 +71,7 @@ export default {
   methods: {
     fetchData() {
       this.loadingState.loading = true;
-      this.dataService.init().then((res) => {
+      return this.dataService.init().then((res) => {
         this.data = res;
         this.loadingState.loading = false;
         console.log(this.data);
@@ -107,35 +107,7 @@ export default {
       this.addChartDataForState();
     },
     addChartDataForState() {
-      let dataPath = this.data.Global;
-      if (this.state.country) {
-        dataPath = this.data.Countries[this.state.country].timeline;
-      }
-      if (this.state.calcType === 'Per 100k' && this.state.period === 'New') {
-        const newData = TYPES.reduce((acc, type) => {
-          acc[type] = this.dataService.getHistoricalDataForEachDayPer100k(
-            type, this.state.country,
-          );
-          return acc;
-        }, {});
-        dataPath['New Per 100k'] = newData;
-      } else if (this.state.calcType === 'Per 100k') {
-        const newData = TYPES.reduce((acc, type) => {
-          acc[type] = this.dataService.getHistoricalDataPer100k(
-            type, this.state.country,
-          );
-          return acc;
-        }, {});
-        dataPath['Per 100k'] = newData;
-      } else if (this.state.period === 'New') {
-        const newData = TYPES.reduce((acc, type) => {
-          acc[type] = this.dataService.getHistoricalDataForEachDay(
-            type, this.state.country,
-          );
-          return acc;
-        }, {});
-        dataPath.New = newData;
-      }
+      this.dataService.addChartDataForState(this.state, TYPES);
     },
   },
 };
