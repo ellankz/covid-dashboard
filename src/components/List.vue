@@ -7,6 +7,9 @@
       <div class="all-time">
         <button class="btn" @click = "pressNewBtn()">{{ getNewButtonText }}</button>
       </div>
+      <div class="sort">
+        <button class="btn" @click = "toSort()">Sort</button>
+      </div>
     </div>
     <div class="radiobuttons">
       <input type="radio" id="confirmed" name="parameter"
@@ -27,7 +30,7 @@
     </div>
     <input type="text" placeholder="Search country">
     <ul>
-      <li :key="country" v-for="country in countries"
+      <li :key="country" v-for="country in countriesList"
       @click="$emit('updateCountry', {countryCode: country.code})">
         <span>
           <img :src="flags[country.code].flag" :alt="country.code">
@@ -52,9 +55,11 @@ export default {
   },
   data() {
     return {
+      sortParam: '',
       countries: this.data.Countries,
       flags: flagsCountries,
       currentType: this.state.type,
+      isSorted: false,
     };
   },
   computed: {
@@ -64,19 +69,36 @@ export default {
     getTotalBtnText() {
       return this.state.calcType === 'Total' ? 'Per 100k' : 'Total';
     },
+    countriesList() {
+      switch (this.sortParam) {
+        case 'toDown': return this.sortedList();
+        default: return Object.values(this.countries);
+      }
+    },
   },
   methods: {
+    sortedList() {
+      return Object.values(this.countries).sort(this.sortByValue);
+    },
+    sortByValue(a, b) {
+      return (this.getValue(a) < this.getValue(b)) ? 1 : -1;
+    },
+    toSort() {
+      this.isSorted = !this.isSorted;
+      if (!this.isSorted) this.sortParam = 'toDown';
+      else this.sortParam = '';
+    },
     getValue(country) {
       if (this.getStateBtn('All time', 'Total')) {
-        return country.timeline.Summary.Total[this.state.type].toLocaleString();
+        return country.timeline.Summary.Total[this.state.type];
       }
       if (this.getStateBtn('New', 'Total')) {
-        return country.timeline.Summary.New[this.state.type].toLocaleString();
+        return country.timeline.Summary.New[this.state.type];
       }
       if (this.getStateBtn('All time', 'Per 100k')) {
-        return country.timeline.Summary.TotalPer100k[this.state.type].toFixed(2);
+        return Number(country.timeline.Summary.TotalPer100k[this.state.type].toFixed(2));
       }
-      return country.timeline.Summary.NewPer100k[this.state.type].toFixed(2);
+      return Number(country.timeline.Summary.NewPer100k[this.state.type].toFixed(2));
     },
     getStateBtn(period, value) {
       return (this.state.period === period) && (this.state.calcType === value);
@@ -106,9 +128,6 @@ export default {
   padding: 5px;
   display: flex;
   margin-bottom: 10px;
-  .all-time {
-    margin-right: 5px;
-  }
 }
 .radiobuttons {
   margin-bottom: 10px;
