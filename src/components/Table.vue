@@ -1,77 +1,85 @@
 <template>
-  <div class="container">
-    <div class="options">
-      <div class="location">
-       <img v-if="state.country" :src="flagPath" alt="sdf">
-       {{ currentCountry }}
+  <div class="table__container">
+    <div class="table__wrap">
+      <div class="table__options">
+        <h2 class="table__location">
+        {{ currentCountry }}
+        <img class="table__flag" v-if="state.country" :src="flagPath" :alt="currentCountry">
+        </h2>
+        <div class="table__caption">
+          <strong>{{state.calcType}} for {{state.period.toLowerCase()}} period</strong>
+        </div>
       </div>
-      <div class="switches">
-      <div class="absolute">
-        <button class="btn" @click = "pressBy100kBtn()">{{ getTotalBtnText }}</button>
+      <div class="inner-table">
+        <div class="inner-table__total total-cases">
+          <div class="inner-table__cases-number">
+            <span v-if="getStateBtn('All time', 'Total')">
+              {{ getTotal.Confirmed.toLocaleString() }}
+            </span>
+            <span v-else-if ="getStateBtn('New', 'Total')">
+              +{{ getLastDayData.Confirmed.toLocaleString() }}
+            </span>
+            <span v-else-if ="getStateBtn('All time', 'Per 100k')">
+              {{ getTotalBy100k.Confirmed.toFixed(2) }}</span>
+            <span v-else>
+              +{{ getLastDayBy100k.Confirmed.toFixed(2) }}
+            </span>
+          </div>
+          <div class="inner-table__title">Cases</div>
+        </div>
+        <div class="inner-table__total total-deaths">
+          <div class="inner-table__cases-number">
+            <span v-if ="getStateBtn('All time', 'Total')">
+              {{ getTotal.Deaths.toLocaleString() }}
+            </span>
+            <span v-else-if ="getStateBtn('New', 'Total')">
+              +{{ getLastDayData.Deaths.toLocaleString() }}
+            </span>
+            <span v-else-if ="getStateBtn('All time', 'Per 100k')">
+              {{ getTotalBy100k.Deaths.toFixed(2) }}
+            </span>
+            <span v-else>
+              +{{ getLastDayBy100k.Deaths.toFixed(2) }}
+            </span>
+          </div>
+          <div class="inner-table__title">Deaths</div>
+        </div>
+        <div class="inner-table__total total-recovered">
+          <div class="inner-table__cases-number">
+            <span v-if ="getStateBtn('All time', 'Total')">
+              {{ getTotal.Recovered.toLocaleString() }}
+            </span>
+            <span v-else-if ="getStateBtn('New', 'Total')">
+              +{{ getLastDayData.Recovered.toLocaleString() }}
+            </span>
+            <span v-else-if ="getStateBtn('All time', 'Per 100k')">
+              {{ getTotalBy100k.Recovered.toFixed(2) }}
+            </span>
+            <span v-else>
+              +{{ getLastDayBy100k.Recovered.toFixed(2) }}
+            </span>
+          </div>
+        <div class="inner-table__title">Recovered</div>
+        </div>
       </div>
-      <div class="all-time">
-        <button class="btn" @click = "pressNewBtn()">{{ getNewButtonText }}</button>
-      </div>
+      <div class="table__switches">
+          <div>
+            <button class="btn" @click = "pressBy100kBtn()">{{ getTotalBtnText }}</button>
+          </div>
+          <div>
+            <button class="btn" @click = "pressNewBtn()">{{ getNewButtonText }}</button>
+          </div>
+        </div>
+      <ExpandButton
+        v-bind:expanded="expanded"
+        @expandClick="expanded ? shrinkTable() : expandTable()"
+      />
     </div>
-    </div>
-    <div class="caption">
-      {{state.calcType}} for {{state.period.toLowerCase()}} period
-    </div>
-    <div class="inner-table">
-      <div class="total total-cases">
-        <div class="title">Cases:</div>
-        <span v-if="getStateBtn('All time', 'Total')">
-          {{ getTotal.Confirmed.toLocaleString() }}
-        </span>
-        <span v-else-if ="getStateBtn('New', 'Total')">
-          +{{ getLastDayData.Confirmed.toLocaleString() }}
-        </span>
-        <span v-else-if ="getStateBtn('All time', 'Per 100k')">
-          {{ getTotalBy100k.Confirmed.toFixed(2) }}</span>
-        <span v-else>
-          {{ getLastDayBy100k.Confirmed.toFixed(2) }}
-        </span>
-      </div>
-      <div class="total total-deaths">
-        <div class="title">Deaths:</div>
-        <span v-if ="getStateBtn('All time', 'Total')">
-          {{ getTotal.Deaths.toLocaleString() }}
-        </span>
-        <span v-else-if ="getStateBtn('New', 'Total')">
-          +{{ getLastDayData.Deaths.toLocaleString() }}
-        </span>
-        <span v-else-if ="getStateBtn('All time', 'Per 100k')">
-          {{ getTotalBy100k.Deaths.toFixed(2) }}
-        </span>
-        <span v-else>
-          {{ getLastDayBy100k.Deaths.toFixed(2) }}
-        </span>
-      </div>
-      <div class="total total-recovered">
-       <div class="title">Recovered:</div>
-       <span v-if ="getStateBtn('All time', 'Total')">
-        {{ getTotal.Recovered.toLocaleString() }}
-       </span>
-       <span v-else-if ="getStateBtn('New', 'Total')">
-        +{{ getLastDayData.Recovered.toLocaleString() }}
-       </span>
-       <span v-else-if ="getStateBtn('All time', 'Per 100k')">
-        {{ getTotalBy100k.Recovered.toFixed(2) }}
-       </span>
-       <span v-else>
-        {{ getLastDayBy100k.Recovered.toFixed(2) }}
-       </span>
-      </div>
-    </div>
-    <button
-      class="btn expand_btn"
-      @click="$emit('expandBlock', 'table')">
-      Expand
-    </button>
   </div>
 </template>
 
 <script>
+import ExpandButton from './ExpandButton.vue';
 import flagsCountries from '../service/countries.json';
 
 export default {
@@ -83,10 +91,14 @@ export default {
     data: Object,
     state: Object,
   },
+  components: {
+    ExpandButton,
+  },
   data() {
     return {
       country: 'World',
       flags: flagsCountries,
+      expanded: false,
     };
   },
   computed: {
@@ -134,46 +146,49 @@ export default {
     getStateBtn(period, value) {
       return (this.state.period === period) && (this.state.calcType === value);
     },
+    expandTable() {
+      this.expanded = true;
+      this.$emit('expandBlock', 'table');
+    },
+    shrinkTable() {
+      this.expanded = false;
+      this.$emit('shrinkBlock');
+    },
   },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 
-.container {
-  background-color: $color-gray;
-  color: #fff;
-  border-radius: 5px;
-  padding: 10px;
+.table__wrap {
+  max-width: 35rem;
+  margin: 0 auto;
 }
-.location {
-  width: 120px;
+
+.table__flag {
+  width: 2rem;
+  margin-left: 0.5rem;
 }
-img {
-  width: 20px;
-  margin-right: 5px;
-}
-.options {
+
+.table__options {
   display: flex;
   align-items: baseline;
   margin-bottom: 15px;
-  justify-content: space-around;
+  justify-content: space-between;
+  padding: 0 1rem;
 }
-.title {
+.inner-table__title {
   margin-bottom: 5px;
 }
 
-.switches {
+.table__switches {
   padding: 5px;
   display: flex;
-  margin-right: 15px;
-  .all-time {
-    margin-right: 10px;
-  }
+  justify-content: flex-end;
+  margin-top: 0.5rem;
 }
-.caption {
-  text-align: center;
+.table__caption {
+  text-align: right;
   margin-bottom: 15px;
 }
 .inner-table {
@@ -181,17 +196,8 @@ img {
   justify-content: space-around;
 }
 
-.total {
-}
-.all-time {
-  button {
-    width: 70px;
-  }
-}
-
-.absolute {
-  button {
-    width: 90px;
-  }
+.inner-table__cases-number {
+  font-size: 1.8rem;
+  line-height: 2.5rem;
 }
 </style>

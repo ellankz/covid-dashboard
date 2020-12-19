@@ -11,16 +11,18 @@
           @change="$emit('updateType', $event.target.value)">
         <label v-bind:for="type">{{ type }}</label>
       </div>
-      <button
-        class="btn control__btn"
-        @click="$emit('updateCalcType', state.calcType === 'Total' ? 'Per 100k' : 'Total')">
-        {{ state.calcType === 'Total' ? 'Per 100k' : 'Total' }}
-      </button>
-      <button
-        class="btn control__btn"
-        @click="$emit('updatePeriod', state.period === 'All time' ? 'New' : 'All time')">
-        {{ state.period === 'All time' ? 'New' : 'All time' }}
-      </button>
+      <div class="control__buttons">
+        <button
+          class="btn control__btn"
+          @click="$emit('updateCalcType', state.calcType === 'Total' ? 'Per 100k' : 'Total')">
+          {{ state.calcType === 'Total' ? 'Per 100k' : 'Total' }}
+        </button>
+        <button
+          class="btn control__btn"
+          @click="$emit('updatePeriod', state.period === 'All time' ? 'New' : 'All time')">
+          {{ state.period === 'All time' ? 'New' : 'All time' }}
+        </button>
+      </div>
       <ExpandButton v-bind:expanded="expanded" @expandClick="expanded ? shrinkMap() : expandMap()"/>
     </div>
   </div>
@@ -165,6 +167,10 @@ export default {
         margin-left: 0.3rem;
         cursor: pointer;
       }
+    }
+
+    &__buttons {
+      margin-left: auto;
     }
   }
 </style>

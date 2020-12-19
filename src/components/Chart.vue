@@ -5,25 +5,29 @@
         <canvas id="chart-container"></canvas>
       </div>
       <div class="control">
-        <button
-          class="btn control__btn"
-          @click="$emit('updateCalcType', state.calcType === 'Total' ? 'Per 100k' : 'Total')">
-          {{ state.calcType === 'Total' ? 'Per 100k' : 'Total' }}
-        </button>
-        <button
-          class="btn control__btn"
-          @click="$emit('updatePeriod', state.period === 'All time' ? 'New' : 'All time')">
-          {{ state.period === 'All time' ? 'New' : 'All time' }}
-        </button>
-        <input type="checkbox" id="Confirmed" value="Confirmed" v-model="currentTypes"
-        @change="$emit('updateChartTypes', currentTypes)" >
-        <label for="Confirmed">Confirmed</label>
-        <input type="checkbox" id="Deaths" value="Deaths" v-model="currentTypes"
-        @change="$emit('updateChartTypes', currentTypes)" >
-        <label for="Deaths">Deaths</label>
-        <input type="checkbox" id="Recovered" value="Recovered" v-model="currentTypes"
-        @change="$emit('updateChartTypes', currentTypes)" >
-        <label for="Recovered">Recovered</label>
+        <div class="control__checkboxes">
+          <input type="checkbox" id="Confirmed" value="Confirmed" v-model="currentTypes"
+          @change="$emit('updateChartTypes', currentTypes)" >
+          <label for="Confirmed">Confirmed</label>
+          <input type="checkbox" id="Deaths" value="Deaths" v-model="currentTypes"
+          @change="$emit('updateChartTypes', currentTypes)" >
+          <label for="Deaths">Deaths</label>
+          <input type="checkbox" id="Recovered" value="Recovered" v-model="currentTypes"
+          @change="$emit('updateChartTypes', currentTypes)" >
+          <label for="Recovered">Recovered</label>
+        </div>
+        <div class="control__buttons">
+          <button
+            class="btn control__btn"
+            @click="$emit('updateCalcType', state.calcType === 'Total' ? 'Per 100k' : 'Total')">
+            {{ state.calcType === 'Total' ? 'Per 100k' : 'Total' }}
+          </button>
+          <button
+            class="btn control__btn"
+            @click="$emit('updatePeriod', state.period === 'All time' ? 'New' : 'All time')">
+            {{ state.period === 'All time' ? 'New' : 'All time' }}
+          </button>
+        </div>
         <ExpandButton
           v-bind:expanded="expanded"
           @expandClick="expanded ? shrinkChart() : expandChart()"
@@ -62,7 +66,7 @@ export default {
 
         options: {
           responsive: true,
-          responsiveAnimationDuration: 50,
+          responsiveAnimationDuration: 0,
           legend: {
             position: 'top',
             labels: {
@@ -80,6 +84,10 @@ export default {
           hover: {
             mode: 'nearest',
             intersect: true,
+          },
+          onHover: (event, chartElement) => {
+            // eslint-disable-next-line no-param-reassign
+            event.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
           },
           scales: {
             yAxes: [{
@@ -218,5 +226,15 @@ export default {
 
   .control {
     justify-content: center;
+    flex-wrap: wrap;
+    &__checkboxes {
+      input {
+        margin-right: 0.5rem;
+      }
+
+      label {
+        margin-right: 0.8rem;
+      }
+    }
   }
 </style>

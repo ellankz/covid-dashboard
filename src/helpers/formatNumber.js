@@ -1,4 +1,6 @@
-export function formatNumber(num, digits) {
+const DIGITS_FOR_BELOW_ONE = 3;
+
+export function formatNumber(num) {
   const char = [
     { value: 1, symbol: '' },
     { value: 1E3, symbol: 'k' },
@@ -14,5 +16,7 @@ export function formatNumber(num, digits) {
       break;
     }
   }
+
+  const digits = num < 1 ? DIGITS_FOR_BELOW_ONE : 0;
   return (num / char[i].value).toFixed(digits) + char[i].symbol;
 }

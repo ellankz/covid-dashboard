@@ -23,6 +23,7 @@
         @updateCalcType="handleUpdateCalcType"
         @updatePeriod="handleUpdatePeriod"
         @updateChartTypes="handleUpdateChartTypes"
+        @shrinkBlock="handleShrink"
         @expandBlock="handleExpand" />
       <Chart
         v-if="data"
@@ -240,6 +241,20 @@ export default {
       }
 
       .chart {
+        width: 100%;
+      }
+    }
+
+    &.expanded.table {
+      grid-template-areas: "table table"
+                           "table table"
+                           "table table";
+
+      .map, .chart, .list {
+        display: none;
+      }
+
+      .table {
         width: 100%;
       }
     }
