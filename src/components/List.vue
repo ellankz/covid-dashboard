@@ -28,7 +28,7 @@
       @change="$emit('updateType', 'Recovered')">
       <label for="recovered">Recovered</label>
     </div>
-    <input type="text" placeholder="Search country">
+    <input type="text" placeholder="Search country" v-model="search">
     <ul>
       <li :key="country" v-for="country in countriesList"
       @click="$emit('updateCountry', {countryCode: country.code})">
@@ -60,6 +60,7 @@ export default {
       flags: flagsCountries,
       currentType: this.state.type,
       isSorted: false,
+      search: '',
     };
   },
   computed: {
@@ -72,13 +73,15 @@ export default {
     countriesList() {
       switch (this.sortParam) {
         case 'toDown': return this.sortedList();
-        default: return Object.values(this.countries);
+        default: return Object.values(this.countries)
+          .filter((country) => country.country.toLowerCase().includes(this.search.toLowerCase()));
       }
     },
   },
   methods: {
     sortedList() {
-      return Object.values(this.countries).sort(this.sortByValue);
+      return Object.values(this.countries).sort(this.sortByValue)
+        .filter((country) => country.country.toLowerCase().includes(this.search.toLowerCase()));
     },
     sortByValue(a, b) {
       return (this.getValue(a) < this.getValue(b)) ? 1 : -1;
