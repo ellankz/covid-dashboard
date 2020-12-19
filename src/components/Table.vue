@@ -14,9 +14,12 @@
       </div>
     </div>
     </div>
+    <div class="caption">
+      {{state.calcType}} for {{state.period.toLowerCase()}} period
+    </div>
     <div class="inner-table">
       <div class="total total-cases">
-        <div class="title">Total cases:</div>
+        <div class="title">Cases:</div>
         <span v-if="getStateBtn('All time', 'Total')">
           {{ getTotal.Confirmed.toLocaleString() }}
         </span>
@@ -30,7 +33,7 @@
         </span>
       </div>
       <div class="total total-deaths">
-        <div class="title">Total deaths:</div>
+        <div class="title">Deaths:</div>
         <span v-if ="getStateBtn('All time', 'Total')">
           {{ getTotal.Deaths.toLocaleString() }}
         </span>
@@ -45,7 +48,7 @@
         </span>
       </div>
       <div class="total total-recovered">
-       <div class="title">Total recovered:</div>
+       <div class="title">Recovered:</div>
        <span v-if ="getStateBtn('All time', 'Total')">
         {{ getTotal.Recovered.toLocaleString() }}
        </span>
@@ -164,7 +167,10 @@ img {
     margin-right: 10px;
   }
 }
-
+.caption {
+  text-align: center;
+  margin-bottom: 15px;
+}
 .inner-table {
   display: flex;
   justify-content: space-around;
