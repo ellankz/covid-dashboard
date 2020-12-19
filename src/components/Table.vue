@@ -2,6 +2,7 @@
   <div class="container">
     <div class="options">
       <div class="location">
+       <img v-if="state.country" :src="flagPath" alt="sdf">
        {{ currentCountry }}
       </div>
       <div class="switches">
@@ -11,11 +12,14 @@
       <div class="all-time">
         <button class="btn" @click = "pressNewBtn()">{{ getNewButtonText }}</button>
       </div>
-      </div>
+    </div>
+    </div>
+    <div class="caption">
+      {{state.calcType}} for {{state.period.toLowerCase()}} period
     </div>
     <div class="inner-table">
       <div class="total total-cases">
-        <div class="title">Total cases:</div>
+        <div class="title">Cases:</div>
         <span v-if="getStateBtn('All time', 'Total')">
           {{ getTotal.Confirmed.toLocaleString() }}
         </span>
@@ -29,7 +33,7 @@
         </span>
       </div>
       <div class="total total-deaths">
-        <div class="title">Total deaths:</div>
+        <div class="title">Deaths:</div>
         <span v-if ="getStateBtn('All time', 'Total')">
           {{ getTotal.Deaths.toLocaleString() }}
         </span>
@@ -44,7 +48,7 @@
         </span>
       </div>
       <div class="total total-recovered">
-       <div class="title">Total recovered:</div>
+       <div class="title">Recovered:</div>
        <span v-if ="getStateBtn('All time', 'Total')">
         {{ getTotal.Recovered.toLocaleString() }}
        </span>
@@ -63,6 +67,8 @@
 </template>
 
 <script>
+import flagsCountries from '../service/countries.json';
+
 export default {
   name: 'Table',
   created() {
@@ -75,9 +81,14 @@ export default {
   data() {
     return {
       country: 'World',
+      flags: flagsCountries,
     };
   },
   computed: {
+    flagPath() {
+      if (this.state.country === null) return 'RUS';
+      return this.flags[this.state.country].flag;
+    },
     currentCountry() {
       if (this.state.country === null) return this.country;
       return this.data.Countries[this.state.country].country;
@@ -131,12 +142,18 @@ export default {
   border-radius: 5px;
   padding: 10px;
 }
-
+.location {
+  width: 120px;
+}
+img {
+  width: 20px;
+  margin-right: 5px;
+}
 .options {
   display: flex;
-  justify-content: space-around;
   align-items: baseline;
   margin-bottom: 15px;
+  justify-content: space-around;
 }
 .title {
   margin-bottom: 5px;
@@ -150,7 +167,10 @@ export default {
     margin-right: 10px;
   }
 }
-
+.caption {
+  text-align: center;
+  margin-bottom: 15px;
+}
 .inner-table {
   display: flex;
   justify-content: space-around;
