@@ -27,7 +27,8 @@
     </div>
     <input type="text" placeholder="Search country">
     <ul>
-      <li :key="country" v-for="country in countries">
+      <li :key="country" v-for="country in countries"
+      @click="$emit('updateCountry', {countryCode: country.code})">
         <span>
           <img :src="flags[country.code].flag" :alt="country.code">
         </span>
@@ -129,6 +130,7 @@ label {
   }
   li:hover {
     background-color: grey;
+    cursor: pointer;
   }
 }
 img {
