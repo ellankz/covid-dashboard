@@ -34,6 +34,7 @@
       v-bind:data="data"
       v-bind:loadingState="loadingState"
       v-bind:state="state"
+      @updateType="handleUpdateType"
       @updateCalcType="handleUpdateCalcType"
       @updatePeriod="handleUpdatePeriod"
       @updateChartTypes="handleUpdateChartTypes"/>
