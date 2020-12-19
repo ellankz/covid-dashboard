@@ -63,6 +63,11 @@
        </span>
       </div>
     </div>
+    <button
+      class="btn expand_btn"
+      @click="$emit('expandBlock', 'table')">
+      Expand
+    </button>
   </div>
 </template>
 

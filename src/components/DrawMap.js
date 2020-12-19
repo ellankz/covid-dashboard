@@ -54,6 +54,10 @@ export class DrawMap {
     this.replaceMarkers();
   }
 
+  redraw() {
+    this.map.invalidateSize(true);
+  }
+
   setMapBounds() {
     const southWest = L.latLng(SOUTH_WEST_DISPLAY_BOUND, -BOUND_SHIFT);
     const northEast = L.latLng(NORTH_EAST_DISPLAY_BOUND, BOUND_SHIFT);
