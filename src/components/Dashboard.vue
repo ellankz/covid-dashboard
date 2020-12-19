@@ -1,42 +1,49 @@
 <template>
-  <h1>Covid-19 Tracking Dashboard</h1>
-  <div class="dashboard">
-    <Map
-      v-if="data"
-      v-bind:data="data"
-      v-bind:loadingState="loadingState"
-      v-bind:state="state"
-      @updateType="handleUpdateType"
-      @updateCalcType="handleUpdateCalcType"
-      @updatePeriod="handleUpdatePeriod"
-      @updateCountry="handleUpdateCountry"
-      class="map dashboard__element" />
-    <Table
-      class="table dashboard__element"
-      v-if="data"
-      v-bind:data="data"
-      v-bind:loadingState="loadingState"
-      v-bind:state="state"
-      @updateCalcType="handleUpdateCalcType"
-      @updatePeriod="handleUpdatePeriod"
-      @updateChartTypes="handleUpdateChartTypes" />
-    <Chart
-      v-if="data"
-      v-bind:data="data"
-      v-bind:loadingState="loadingState"
-      v-bind:state="state"
-      @updateCalcType="handleUpdateCalcType"
-      @updatePeriod="handleUpdatePeriod"
-      @updateChartTypes="handleUpdateChartTypes"
-      class="chart dashboard__element" />
-    <List class="list dashboard__element"
-      v-if="data"
-      v-bind:data="data"
-      v-bind:loadingState="loadingState"
-      v-bind:state="state"
-      @updateCalcType="handleUpdateCalcType"
-      @updatePeriod="handleUpdatePeriod"
-      @updateChartTypes="handleUpdateChartTypes"/>
+  <div class="dashboard_wrap">
+    <h1>Covid-19 Tracking Dashboard</h1>
+    <div v-bind:class="`${layout.baseClass} ${layout.expanded ? `expanded ${layout.block}` : ''}`">
+      <Map
+        v-if="data"
+        v-bind:data="data"
+        v-bind:loadingState="loadingState"
+        v-bind:state="state"
+        @updateType="handleUpdateType"
+        @updateCalcType="handleUpdateCalcType"
+        @updatePeriod="handleUpdatePeriod"
+        @updateCountry="handleUpdateCountry"
+        @expandBlock="handleExpand"
+        @shrinkBlock="handleShrink"
+        class="map dashboard__element" />
+      <Table
+        class="table dashboard__element"
+        v-if="data"
+        v-bind:data="data"
+        v-bind:loadingState="loadingState"
+        v-bind:state="state"
+        @updateCalcType="handleUpdateCalcType"
+        @updatePeriod="handleUpdatePeriod"
+        @updateChartTypes="handleUpdateChartTypes"
+        @expandBlock="handleExpand" />
+      <Chart
+        v-if="data"
+        v-bind:data="data"
+        v-bind:loadingState="loadingState"
+        v-bind:state="state"
+        @updateCalcType="handleUpdateCalcType"
+        @updatePeriod="handleUpdatePeriod"
+        @updateChartTypes="handleUpdateChartTypes"
+        @expandBlock="handleExpand"
+        @shrinkBlock="handleShrink"
+        class="chart dashboard__element" />
+      <List class="list dashboard__element"
+        v-if="data"
+        v-bind:data="data"
+        v-bind:loadingState="loadingState"
+        v-bind:state="state"
+        @updateCalcType="handleUpdateCalcType"
+        @updatePeriod="handleUpdatePeriod"
+        @updateChartTypes="handleUpdateChartTypes"/>
+    </div>
   </div>
 </template>
 
@@ -73,6 +80,11 @@ export default {
         calcType: 'Total',
         period: 'All time',
         chartTypes: ['Confirmed'],
+      },
+      layout: {
+        expanded: false,
+        block: null,
+        baseClass: 'dashboard',
       },
     };
   },
@@ -117,6 +129,14 @@ export default {
       this.state.chartTypes = types;
       this.addChartDataForState();
     },
+    handleExpand(block) {
+      this.layout.expanded = true;
+      this.layout.block = block;
+    },
+    handleShrink() {
+      this.layout.expanded = false;
+      this.layout.block = null;
+    },
     addChartDataForState() {
       let dataPath = this.data.Global;
       if (this.state.country) {
@@ -153,23 +173,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .dashboard {
-    display: grid;
-    grid-template-areas: "map table"
-                         "map chart"
-                         "map list";
-    grid-template-rows: 0.5fr 1fr 1fr;
-    grid-template-columns: 5fr 2fr;
-    grid-gap: 0.5rem;
-
-    &__element {
-      background-color: $color-gray;
-      border-radius: 5px;
-      padding: 0.8rem;
-    }
-  }
-
-  .map {
+ .map {
     grid-area: map;
   }
 
@@ -179,9 +183,67 @@ export default {
 
   .chart {
     grid-area: chart;
+    max-width: 100%;
+    max-height: 100%;
   }
 
   .table {
     grid-area: table;
   }
+
+  .dashboard__element {
+    position: relative;
+  }
+
+  .dashboard_wrap {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+  }
+
+  .dashboard {
+    display: grid;
+    grid-template-areas: "map table"
+                         "map chart"
+                         "map list";
+    grid-template-rows: 0.5fr 1fr 1fr;
+    grid-template-columns: 5fr calc(30% - 0.25rem);
+    grid-gap: 0.5rem;
+    height: 92vh;
+
+    &__element {
+      background-color: $color-gray;
+      border-radius: 5px;
+      padding: 0.8rem;
+    }
+
+    &.expanded.map {
+      grid-template-areas: "map map"
+                           "map map"
+                           "map map";
+
+      .chart, .table, .list {
+        display: none;
+      }
+
+      .map {
+        width: 100%;
+      }
+    }
+
+    &.expanded.chart {
+      grid-template-areas: "chart chart"
+                           "chart chart"
+                           "chart chart";
+
+      .map, .table, .list {
+        display: none;
+      }
+
+      .chart {
+        width: 100%;
+      }
+    }
+
+  }
+
 </style>

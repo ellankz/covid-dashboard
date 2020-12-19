@@ -21,12 +21,14 @@
         @click="$emit('updatePeriod', state.period === 'All time' ? 'New' : 'All time')">
         {{ state.period === 'All time' ? 'New' : 'All time' }}
       </button>
+      <ExpandButton v-bind:expanded="expanded" @expandClick="expanded ? shrinkMap() : expandMap()"/>
     </div>
   </div>
 </template>
 
 <script>
 import { DrawMap } from './DrawMap';
+import ExpandButton from './ExpandButton.vue';
 
 export default {
   name: 'Map',
@@ -35,7 +37,11 @@ export default {
       map: null,
       parameterTypes: ['Confirmed', 'Deaths', 'Recovered'],
       currentType: this.state.type,
+      expanded: false,
     };
+  },
+  components: {
+    ExpandButton,
   },
   props: {
     data: Object,
@@ -65,6 +71,22 @@ export default {
     },
     updateMap() {
       this.drawMap.update(this.state);
+    },
+    expandMap() {
+      this.expanded = true;
+      this.$emit('expandBlock', 'map');
+      this.handleResize();
+    },
+    shrinkMap() {
+      this.expanded = false;
+      this.$emit('shrinkBlock');
+      this.handleResize();
+    },
+    handleResize() {
+      setTimeout(() => {
+        this.drawMap.update(this.state);
+        this.drawMap.redraw();
+      }, 0);
     },
   },
 };
