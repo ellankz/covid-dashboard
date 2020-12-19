@@ -2,6 +2,7 @@
   <div class="container">
     <div class="options">
       <div class="location">
+       <img v-if="state.country" :src="flagPath" alt="sdf">
        {{ currentCountry }}
       </div>
       <div class="switches">
@@ -11,7 +12,7 @@
       <div class="all-time">
         <button class="btn" @click = "pressNewBtn()">{{ getNewButtonText }}</button>
       </div>
-      </div>
+    </div>
     </div>
     <div class="inner-table">
       <div class="total total-cases">
@@ -63,6 +64,8 @@
 </template>
 
 <script>
+import flagsCountries from '../service/countries.json';
+
 export default {
   name: 'Table',
   created() {
@@ -75,9 +78,14 @@ export default {
   data() {
     return {
       country: 'World',
+      flags: flagsCountries,
     };
   },
   computed: {
+    flagPath() {
+      if (this.state.country === null) return 'RUS';
+      return this.flags[this.state.country].flag;
+    },
     currentCountry() {
       if (this.state.country === null) return this.country;
       return this.data.Countries[this.state.country].country;
@@ -131,12 +139,18 @@ export default {
   border-radius: 5px;
   padding: 10px;
 }
-
+.location {
+  width: 120px;
+}
+img {
+  width: 20px;
+  margin-right: 5px;
+}
 .options {
   display: flex;
-  justify-content: space-around;
   align-items: baseline;
   margin-bottom: 15px;
+  justify-content: space-around;
 }
 .title {
   margin-bottom: 5px;
