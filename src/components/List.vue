@@ -1,14 +1,28 @@
 <template>
   <div class="container">
+    <div class="switches">
+      <div class="absolute">
+        <button class="btn" @click = "pressBy100kBtn()">{{ getTotalBtnText }}</button>
+      </div>
+      <div class="all-time">
+        <button class="btn" @click = "pressNewBtn()">{{ getNewButtonText }}</button>
+      </div>
+    </div>
+    <div class="radiobuttons">
+      <input type="radio" id="confirmed" name="parameter" value="Confirmed">
+      <label for="confirmed">Confirmed</label>
+      <input type="radio" id="deaths" name="parameter" value="deaths">
+      <label for="deaths">Deaths</label>
+      <input type="radio" id="recovered" name="parameter" value="recovered">
+      <label for="recovered">Recovered</label>
+    </div>
     <input type="text" placeholder="Search country">
     <ul>
-      <li :key="countryCases" v-for="countryCases in countriesCases"
-        @click="getTotal(countryCases)">
+      <li :key="country" v-for="country in countries">
         <span>
-          <img :src="flags[countryCases.code].flag" :alt="countryCases.code">
-          {{countryCases.country}}
+          <img :src="flags[country.code].flag" :alt="country.code">
+          {{country.country}}: {{ getValue(country) }}
         </span>
-        <span>{{ getValues(countryCases, 'cases') }}</span>
       </li>
     </ul>
   </div>
@@ -23,28 +37,26 @@ export default {
   props: {
     data: Object,
     loadingState: Object,
+    state: Object,
   },
   data() {
     return {
-      countriesCases: this.data.Countries,
+      countries: this.data.Countries,
       flags: flagsCountries,
+      value: 0,
     };
   },
-  methods: {
-    getValues(countryCases, value) {
-      return Object.values(countryCases.timeline[value])[1];
+  computed: {
+    getNewButtonText() {
+      return this.state.period === 'All time' ? 'New' : 'All time';
     },
-    getTotal(key) {
-      const [yesterdayCases, todayCases] = Object.values(key.timeline.cases);
-      this.totalCases = todayCases;
-      this.lastDayCases = todayCases - yesterdayCases;
-      const [yesterdayDeaths, todayDeaths] = Object.values(key.timeline.deaths);
-      this.totalDeaths = todayDeaths;
-      this.lastDayDeaths = todayDeaths - yesterdayDeaths;
-      const [yesterdayRecovered, todayRecovered] = Object.values(key.timeline.recovered);
-      this.totalRecovered = todayRecovered;
-      this.lastDayRecovered = todayRecovered - yesterdayRecovered;
-      this.world = key.country;
+    getTotalBtnText() {
+      return this.state.calcType === 'Total' ? 'Per 100k' : 'Total';
+    },
+  },
+  methods: {
+    getValue(country) {
+      return country.timeline.Summary.Total.Confirmed;
     },
   },
 };
@@ -55,7 +67,26 @@ export default {
   .container {
     background-color: $color-gray;
     padding: 10px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
+
+  .switches {
+  padding: 5px;
+  display: flex;
+  margin-bottom: 10px;
+  .all-time {
+    margin-right: 5px;
+  }
+}
+.radiobuttons {
+  margin-bottom: 10px;
+}
+label {
+  margin: 5px;
+}
   ul {
     overflow: auto;
     height: 300px;
