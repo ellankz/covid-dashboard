@@ -1,26 +1,38 @@
 <template>
   <div>
-    <canvas id="chart-container"></canvas>
-    <div class="control">
-       <button
-        class="btn control__btn"
-        @click="$emit('updateCalcType', state.calcType === 'Total' ? 'Per 100k' : 'Total')">
-        {{ state.calcType === 'Total' ? 'Per 100k' : 'Total' }}
-      </button>
-      <button
-        class="btn control__btn"
-        @click="$emit('updatePeriod', state.period === 'All time' ? 'New' : 'All time')">
-        {{ state.period === 'All time' ? 'New' : 'All time' }}
-      </button>
-      <input type="checkbox" id="Confirmed" value="Confirmed" v-model="currentTypes"
-       @change="$emit('updateChartTypes', currentTypes)" >
-      <label for="Confirmed">Confirmed</label>
-      <input type="checkbox" id="Deaths" value="Deaths" v-model="currentTypes"
-       @change="$emit('updateChartTypes', currentTypes)" >
-      <label for="Deaths">Deaths</label>
-      <input type="checkbox" id="Recovered" value="Recovered" v-model="currentTypes"
-       @change="$emit('updateChartTypes', currentTypes)" >
-      <label for="Recovered">Recovered</label>
+    <div class="chart-container">
+      <div class="chart-wrap">
+        <canvas id="chart-container"></canvas>
+      </div>
+      <div class="control">
+        <div class="control__checkboxes">
+          <input type="checkbox" id="Confirmed" value="Confirmed" v-model="currentTypes"
+          @change="$emit('updateChartTypes', currentTypes)" >
+          <label for="Confirmed">Confirmed</label>
+          <input type="checkbox" id="Deaths" value="Deaths" v-model="currentTypes"
+          @change="$emit('updateChartTypes', currentTypes)" >
+          <label for="Deaths">Deaths</label>
+          <input type="checkbox" id="Recovered" value="Recovered" v-model="currentTypes"
+          @change="$emit('updateChartTypes', currentTypes)" >
+          <label for="Recovered">Recovered</label>
+        </div>
+        <div class="control__buttons">
+          <button
+            class="btn control__btn"
+            @click="$emit('updateCalcType', state.calcType === 'Total' ? 'Per 100k' : 'Total')">
+            {{ state.calcType === 'Total' ? 'Per 100k' : 'Total' }}
+          </button>
+          <button
+            class="btn control__btn"
+            @click="$emit('updatePeriod', state.period === 'All time' ? 'New' : 'All time')">
+            {{ state.period === 'All time' ? 'New' : 'All time' }}
+          </button>
+        </div>
+        <ExpandButton
+          v-bind:expanded="expanded"
+          @expandClick="expanded ? shrinkChart() : expandChart()"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -29,6 +41,7 @@
 import Chart from 'chart.js';
 import moment from 'moment';
 import { formatNumber } from '../helpers/formatNumber';
+import ExpandButton from './ExpandButton.vue';
 import countries from '../service/countries.json';
 
 const COLOR_BLUE = '#0075ff';
@@ -40,6 +53,7 @@ export default {
   data() {
     return {
       chart: null,
+      expanded: false,
       types: ['Confirmed', 'Deaths', 'Recovered'],
       currentTypes: this.state.chartTypes,
       chartConfig: {
@@ -52,6 +66,7 @@ export default {
 
         options: {
           responsive: true,
+          responsiveAnimationDuration: 0,
           legend: {
             position: 'top',
             labels: {
@@ -70,6 +85,10 @@ export default {
             mode: 'nearest',
             intersect: true,
           },
+          onHover: (event, chartElement) => {
+            // eslint-disable-next-line no-param-reassign
+            event.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+          },
           scales: {
             yAxes: [{
               ticks: {
@@ -85,10 +104,11 @@ export default {
             },
             ],
             xAxes: [{
+              type: 'time',
+              time: {
+                unit: 'month',
+              },
               ticks: {
-                callback(label) {
-                  return moment(label).format('DD-MM-YYYY');
-                },
                 fontColor: 'rgba(255, 255, 255, 0.8)',
               },
               gridLines: {
@@ -106,6 +126,9 @@ export default {
     data: Object,
     loadingState: Object,
     state: Object,
+  },
+  components: {
+    ExpandButton,
   },
   watch: {
     state: {
@@ -168,9 +191,50 @@ export default {
         pointHoverRadius: 1,
       });
     },
+    expandChart() {
+      this.expanded = true;
+      this.$emit('expandBlock', 'chart');
+      this.handleResize();
+    },
+    shrinkChart() {
+      this.expanded = false;
+      this.$emit('shrinkBlock');
+      this.handleResize();
+    },
+    handleResize() {
+      setTimeout(() => {
+        this.updateChart();
+      }, 0);
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
+  .chart-container {
+    margin: 0 auto;
+  }
+  .chart-wrap {
+    position: relative;
+    max-width: 50rem;
+    margin: 0 auto;
+  }
+  #chart-container {
+    width: 100%;
+    height: 100%;
+  }
+
+  .control {
+    justify-content: center;
+    flex-wrap: wrap;
+    &__checkboxes {
+      input {
+        margin-right: 0.5rem;
+      }
+
+      label {
+        margin-right: 0.8rem;
+      }
+    }
+  }
 </style>
