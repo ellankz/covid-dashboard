@@ -17,16 +17,16 @@
           <label for="Recovered">Recovered</label>
         </div>
         <div class="control__buttons">
-          <button
-            class="btn control__btn"
-            @click="$emit('updateCalcType', state.calcType === 'Total' ? 'Per 100k' : 'Total')">
-            {{ state.calcType === 'Total' ? 'Per 100k' : 'Total' }}
-          </button>
-          <button
-            class="btn control__btn"
-            @click="$emit('updatePeriod', state.period === 'All time' ? 'New' : 'All time')">
-            {{ state.period === 'All time' ? 'New' : 'All time' }}
-          </button>
+          <ArrowButton
+            v-bind:options="['Total', 'Per 100k']"
+            v-bind:currentOption="state.calcType"
+            @updateOption="(calcType) => {$emit('updateCalcType', calcType)}"
+          />
+          <ArrowButton
+            v-bind:options="['All time', 'New']"
+            v-bind:currentOption="state.period"
+            @updateOption="(period) => {$emit('updatePeriod', period)}"
+          />
         </div>
         <ExpandButton
           v-bind:expanded="expanded"
@@ -42,6 +42,7 @@ import Chart from 'chart.js';
 import moment from 'moment';
 import { formatNumber } from '../helpers/formatNumber';
 import ExpandButton from './ExpandButton.vue';
+import ArrowButton from './ArrowButton.vue';
 import countries from '../service/countries.json';
 
 const COLOR_BLUE = '#0075ff';
@@ -129,6 +130,7 @@ export default {
   },
   components: {
     ExpandButton,
+    ArrowButton,
   },
   watch: {
     state: {
@@ -227,6 +229,9 @@ export default {
   .control {
     justify-content: center;
     flex-wrap: wrap;
+    max-width: 50rem;
+    margin: 0.5rem auto 0;
+
     &__checkboxes {
       input {
         margin-right: 0.5rem;

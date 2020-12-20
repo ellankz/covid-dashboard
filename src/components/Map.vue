@@ -2,7 +2,12 @@
   <div>
     <div id="map-container"></div>
     <div class="control">
-      <div v-for="type in parameterTypes" v-bind:key="type" class="control__radio">
+      <ArrowButton
+          v-bind:options="['Confirmed', 'Deaths', 'Recovered']"
+          v-bind:currentOption="state.type"
+          @updateOption="(type) => {$emit('updateType', type)}"
+        />
+      <!-- <div v-for="type in parameterTypes" v-bind:key="type" class="control__radio">
         <input
           type="radio"
           v-bind:value="type"
@@ -10,18 +15,18 @@
           v-bind:id="type"
           @change="$emit('updateType', $event.target.value)">
         <label v-bind:for="type">{{ type }}</label>
-      </div>
+      </div> -->
       <div class="control__buttons">
-        <button
-          class="btn control__btn"
-          @click="$emit('updateCalcType', state.calcType === 'Total' ? 'Per 100k' : 'Total')">
-          {{ state.calcType === 'Total' ? 'Per 100k' : 'Total' }}
-        </button>
-        <button
-          class="btn control__btn"
-          @click="$emit('updatePeriod', state.period === 'All time' ? 'New' : 'All time')">
-          {{ state.period === 'All time' ? 'New' : 'All time' }}
-        </button>
+        <ArrowButton
+          v-bind:options="['Total', 'Per 100k']"
+          v-bind:currentOption="state.calcType"
+          @updateOption="(calcType) => {$emit('updateCalcType', calcType)}"
+        />
+        <ArrowButton
+          v-bind:options="['All time', 'New']"
+          v-bind:currentOption="state.period"
+          @updateOption="(period) => {$emit('updatePeriod', period)}"
+        />
       </div>
       <ExpandButton v-bind:expanded="expanded" @expandClick="expanded ? shrinkMap() : expandMap()"/>
     </div>
@@ -31,6 +36,7 @@
 <script>
 import { DrawMap } from './DrawMap';
 import ExpandButton from './ExpandButton.vue';
+import ArrowButton from './ArrowButton.vue';
 
 export default {
   name: 'Map',
@@ -44,6 +50,7 @@ export default {
   },
   components: {
     ExpandButton,
+    ArrowButton,
   },
   props: {
     data: Object,
