@@ -63,13 +63,17 @@
         </div>
       </div>
       <div class="table__switches">
-          <div>
-            <button class="btn" @click = "pressBy100kBtn()">{{ getTotalBtnText }}</button>
-          </div>
-          <div>
-            <button class="btn" @click = "pressNewBtn()">{{ getNewButtonText }}</button>
-          </div>
-        </div>
+        <ArrowButton
+          v-bind:options="['Total', 'Per 100k']"
+          v-bind:currentOption="state.calcType"
+          @updateOption="(calcType) => {$emit('updateCalcType', calcType)}"
+        />
+        <ArrowButton
+          v-bind:options="['All time', 'New']"
+          v-bind:currentOption="state.period"
+          @updateOption="(period) => {$emit('updatePeriod', period)}"
+        />
+      </div>
       <ExpandButton
         v-bind:expanded="expanded"
         @expandClick="expanded ? shrinkTable() : expandTable()"
@@ -79,20 +83,19 @@
 </template>
 
 <script>
+import ArrowButton from './ArrowButton.vue';
 import ExpandButton from './ExpandButton.vue';
 import flagsCountries from '../service/countries.json';
 
 export default {
   name: 'Table',
-  created() {
-    this.logData();
-  },
   props: {
     data: Object,
     state: Object,
   },
   components: {
     ExpandButton,
+    ArrowButton,
   },
   data() {
     return {
@@ -126,23 +129,8 @@ export default {
       if (this.state.country === null) return this.data.Global.Summary.NewPer100k;
       return this.data.Countries[this.state.country].timeline.Summary.NewPer100k;
     },
-    getNewButtonText() {
-      return this.state.period === 'All time' ? 'New' : 'All time';
-    },
-    getTotalBtnText() {
-      return this.state.calcType === 'Total' ? 'Per 100k' : 'Total';
-    },
   },
   methods: {
-    logData() {
-      console.log(this.data);
-    },
-    pressNewBtn() {
-      this.$emit('updatePeriod', this.state.period === 'All time' ? 'New' : 'All time');
-    },
-    pressBy100kBtn() {
-      this.$emit('updateCalcType', this.state.calcType === 'Total' ? 'Per 100k' : 'Total');
-    },
     getStateBtn(period, value) {
       return (this.state.period === period) && (this.state.calcType === value);
     },
@@ -193,7 +181,9 @@ export default {
 }
 .inner-table {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  padding: 0 1rem;
+
 }
 
 .inner-table__cases-number {
