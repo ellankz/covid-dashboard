@@ -208,10 +208,6 @@ export default {
     grid-area: table;
   }
 
-  .dashboard__element {
-    position: relative;
-  }
-
   .dashboard_wrap {
       padding-left: 0.5rem;
       padding-right: 0.5rem;
@@ -232,7 +228,8 @@ export default {
     &__element {
       background-color: $color-gray;
       border-radius: 5px;
-      padding: 0.8rem;
+      padding: 0.5rem;
+      position: relative;
     }
 
     &.expanded.map {

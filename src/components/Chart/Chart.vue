@@ -241,5 +241,9 @@ export default {
         margin-right: 0.8rem;
       }
     }
+
+    &__buttons {
+      margin-top: 0.5rem;
+    }
   }
 </style>

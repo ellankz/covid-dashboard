@@ -171,7 +171,7 @@ export default {
 .table__options {
   display: flex;
   align-items: baseline;
-  margin-bottom: 15px;
+  margin-bottom: 0;
   justify-content: space-between;
   padding: 0 1rem;
 }
