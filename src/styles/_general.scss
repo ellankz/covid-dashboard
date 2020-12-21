@@ -11,6 +11,7 @@ body {
   line-height: 120%;
   background-color: $color-black;
   color: $color-white;
+  margin: 0;
 }
 
 .btn {
@@ -40,58 +41,6 @@ body {
   }
 }
 
-.btn_arrows {
-  background-color: $color-gray;
-  position: relative;
-  padding: 0.2rem 0.8rem;
-  transition: color 0.2s linear;
-  &::after, &::before {
-    content: '';
-    transition: border-color 0.2s linear;
-    width: 0; 
-    height: 0; 
-    border-top: 5px solid transparent;
-    border-bottom: 5px solid transparent;
-    position: absolute;
-    top: 6px;
-  }
-  &::after {
-    border-left: 5px solid $color-white;
-    right: 0;
-  }
-  
-  &::before {
-    border-right:5px solid $color-white;
-    left: 0;
-  }
-  
-  &:hover {
-    color: darken($color: $color-white, $amount: 20%);
-  }
-  &:hover::after {
-    border-left-color: darken($color: $color-white, $amount: 20%);
-  }
-  
-  &:hover::before {
-    border-right-color: darken($color: $color-white, $amount: 20%);
-  }
-
-  &:active {
-    background-color: $color-gray;
-    transform: none;
-    color: darken($color: $color-white, $amount: 50%);
-  }
-
-  &:active::after {
-    border-left-color: darken($color: $color-white, $amount: 50%);
-  }
-  
-  &:active::before {
-    border-right-color: darken($color: $color-white, $amount: 50%);
-  }
-
-
-}
 
 .expand-toggle {
   border: 1px solid $color-white;

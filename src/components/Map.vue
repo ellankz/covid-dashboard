@@ -7,15 +7,6 @@
           v-bind:currentOption="state.type"
           @updateOption="(type) => {$emit('updateType', type)}"
         />
-      <!-- <div v-for="type in parameterTypes" v-bind:key="type" class="control__radio">
-        <input
-          type="radio"
-          v-bind:value="type"
-          v-model="currentType"
-          v-bind:id="type"
-          @change="$emit('updateType', $event.target.value)">
-        <label v-bind:for="type">{{ type }}</label>
-      </div> -->
       <div class="control__buttons">
         <ArrowButton
           v-bind:options="['Total', 'Per 100k']"
@@ -103,7 +94,7 @@ export default {
 
 <style lang="scss">
   #map-container {
-    height: 84vh;
+    height: 81vh;
     width: 100%;
   }
   .leaflet-container {

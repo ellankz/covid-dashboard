@@ -41,7 +41,7 @@ export default {
   transition: color 0.2s linear;
   font-size: 1.1rem;
   color: $color-blue-2;
-  min-width: 95px;
+  min-width: 116px;
 
   &::after, &::before {
     content: '';

@@ -53,6 +53,8 @@ export class DataService {
     const arrayCases = Object.values(dataObject.Confirmed).sort((a, b) => b - a);
     const arrayDeaths = Object.values(dataObject.Deaths).sort((a, b) => b - a);
     const arrayRecvr = Object.values(dataObject.Recovered).sort((a, b) => b - a);
+    const dates = Object.keys(dataObject.Confirmed);
+    summary.Date = dates[dates.length - 1];
     summary.New = {
       Confirmed: arrayCases[0] - arrayCases[1],
       Deaths: arrayDeaths[0] - arrayDeaths[1],
