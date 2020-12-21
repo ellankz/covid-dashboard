@@ -42,6 +42,7 @@
         v-bind:loadingState="loadingState"
         v-bind:state="state"
         @updateCountry="handleUpdateCountry"
+        @updateType="handleUpdateType"
         @updateCalcType="handleUpdateCalcType"
         @updatePeriod="handleUpdatePeriod"
         @updateChartTypes="handleUpdateChartTypes"
