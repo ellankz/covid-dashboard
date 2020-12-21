@@ -10,8 +10,8 @@
 </template>
 
 <script>
-import expandIcon from '../assets/expand.svg';
-import shrinkIcon from '../assets/shrink.svg';
+import expandIcon from '../../assets/expand.svg';
+import shrinkIcon from '../../assets/shrink.svg';
 
 export default {
   name: 'ExpandButton',

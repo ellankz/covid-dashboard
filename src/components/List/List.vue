@@ -40,9 +40,9 @@
 </template>
 
 <script>
-import flagsCountries from '../service/countries.json';
-import ArrowButton from './ArrowButton.vue';
-import ExpandButton from './ExpandButton.vue';
+import flagsCountries from '../../service/countries.json';
+import ArrowButton from '../ArrowButton/ArrowButton.vue';
+import ExpandButton from '../ExpandButton/ExpandButton.vue';
 
 export default {
   name: 'List',

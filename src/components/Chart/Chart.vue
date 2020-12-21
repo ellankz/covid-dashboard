@@ -40,10 +40,10 @@
 <script>
 import Chart from 'chart.js';
 import moment from 'moment';
-import { formatNumber } from '../helpers/formatNumber';
-import ExpandButton from './ExpandButton.vue';
-import ArrowButton from './ArrowButton.vue';
-import countries from '../service/countries.json';
+import { formatNumber } from '../../helpers/formatNumber';
+import ExpandButton from '../ExpandButton/ExpandButton.vue';
+import ArrowButton from '../ArrowButton/ArrowButton.vue';
+import countries from '../../service/countries.json';
 
 const COLOR_BLUE = '#0075ff';
 const COLOR_RED = 'red';

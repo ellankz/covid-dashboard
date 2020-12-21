@@ -89,9 +89,9 @@
 
 <script>
 import moment from 'moment';
-import ArrowButton from './ArrowButton.vue';
-import ExpandButton from './ExpandButton.vue';
-import flagsCountries from '../service/countries.json';
+import ArrowButton from '../ArrowButton/ArrowButton.vue';
+import ExpandButton from '../ExpandButton/ExpandButton.vue';
+import flagsCountries from '../../service/countries.json';
 
 export default {
   name: 'Table',

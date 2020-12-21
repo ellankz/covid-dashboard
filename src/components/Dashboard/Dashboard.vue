@@ -54,12 +54,12 @@
 </template>
 
 <script>
-import { DataService } from '../service/DataService';
-import Map from './Map.vue';
-import List from './List.vue';
-import Table from './Table.vue';
-import Chart from './Chart.vue';
-import Footer from './Footer.vue';
+import { DataService } from '../../service/DataService';
+import Map from '../Map/Map.vue';
+import List from '../List/List.vue';
+import Table from '../Table/Table.vue';
+import Chart from '../Chart/Chart.vue';
+import Footer from '../Footer/Footer.vue';
 
 const TYPES = ['Confirmed', 'Deaths', 'Recovered'];
 // const PERIODS = ['All time', 'New'];

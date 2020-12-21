@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import logo from '../assets/rs-school-logo.svg';
+import logo from '../../assets/rs-school-logo.svg';
 
 const GIHUB_NAME_1 = 'ellankz';
 const GIHUB_NAME_2 = 'aazubakin';
