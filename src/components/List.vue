@@ -1,5 +1,4 @@
 <template>
-<<<<<<< HEAD
   <div v-bind:class="'container' + expanded === true ? 'list-expanded' : ''">
     <div v-bind:class="`list-wrap ${(expanded === true) ? 'list-expanded' : ''}`">
       <div class="switches">
@@ -43,57 +42,12 @@
       </ul>
     </div>
     <ExpandButton v-bind:expanded="expanded" @expandClick="expanded ? shrinkList() : expandList()"/>
-=======
-  <div class="container">
-    <div class="switches">
-      <div class="absolute">
-        <button class="btn" @click = "pressBy100kBtn()">{{ getTotalBtnText }}</button>
-      </div>
-      <div class="all-time">
-        <button class="btn" @click = "pressNewBtn()">{{ getNewButtonText }}</button>
-      </div>
-      <div class="sort">
-        <button class="btn" @click = "toSort()">Sort</button>
-      </div>
-    </div>
-    <div class="radiobuttons">
-      <input type="radio" id="confirmed" name="parameter"
-      v-model="currentType"
-      checked
-      @change="$emit('updateType', 'Confirmed')">
-      <label for="confirmed">Confirmed</label>
-
-      <input type="radio" id="deaths" name="parameter"
-      v-model="currentType"
-      @change="$emit('updateType', 'Deaths')">
-      <label for="deaths">Deaths</label>
-
-      <input type="radio" id="recovered" name="parameter"
-      v-model="currentType"
-      @change="$emit('updateType', 'Recovered')">
-      <label for="recovered">Recovered</label>
-    </div>
-    <input type="text" placeholder="Search country" v-model="search">
-    <ul>
-      <li :key="country" v-for="country in countriesList"
-      @click="$emit('updateCountry', {countryCode: country.code})">
-        <span>
-          <img :src="flags[country.code].flag" :alt="country.code">
-        </span>
-        <span class="country">{{country.country}}: </span>
-        <span>{{ getValue(country) }}</span>
-      </li>
-    </ul>
->>>>>>> db16b43e8abaf68bed221a5c6e09696df334b8cb
   </div>
 </template>
 
 <script>
 import flagsCountries from '../service/countries.json';
-<<<<<<< HEAD
 import ExpandButton from './ExpandButton.vue';
-=======
->>>>>>> db16b43e8abaf68bed221a5c6e09696df334b8cb
 
 export default {
   name: 'List',
@@ -113,10 +67,7 @@ export default {
       currentType: this.state.type,
       isSorted: false,
       search: '',
-<<<<<<< HEAD
       expanded: false,
-=======
->>>>>>> db16b43e8abaf68bed221a5c6e09696df334b8cb
     };
   },
   computed: {
@@ -168,7 +119,6 @@ export default {
     pressBy100kBtn() {
       this.$emit('updateCalcType', this.state.calcType === 'Total' ? 'Per 100k' : 'Total');
     },
-<<<<<<< HEAD
     expandList() {
       this.expanded = true;
       this.$emit('expandBlock', 'list');
@@ -177,8 +127,6 @@ export default {
       this.expanded = false;
       this.$emit('shrinkBlock');
     },
-=======
->>>>>>> db16b43e8abaf68bed221a5c6e09696df334b8cb
   },
 };
 </script>
@@ -187,17 +135,12 @@ export default {
   .container {
     background-color: $color-gray;
     padding: 10px;
-<<<<<<< HEAD
-=======
-    width: 350px;
->>>>>>> db16b43e8abaf68bed221a5c6e09696df334b8cb
     display: flex;
     flex-direction: column;
     align-items: center;
   }
 
   .switches {
-<<<<<<< HEAD
     padding: 5px;
     display: flex;
     margin-bottom: 10px;
@@ -230,35 +173,6 @@ export default {
     }
 }
 
-=======
-  padding: 5px;
-  display: flex;
-  margin-bottom: 10px;
-}
-.radiobuttons {
-  margin-bottom: 10px;
-}
-label {
-  margin: 5px;
-}
-  ul {
-    overflow: auto;
-    height: 300px;
-    margin-left: 0;
-    padding-left: 0;
-  li {
-    display: flex;
-    min-width: 250px;
-    .country {
-      width: 100px;
-    }
-  }
-  li:hover {
-    background-color: grey;
-    cursor: pointer;
-  }
-}
->>>>>>> db16b43e8abaf68bed221a5c6e09696df334b8cb
 img {
   margin-right: 10px;
   width: 20px;
@@ -267,7 +181,6 @@ img {
 span {
   margin-right: 10px;
 }
-<<<<<<< HEAD
 
 .scrolled {
   &::-webkit-scrollbar {
@@ -302,6 +215,4 @@ span {
     max-height: 70vh;
   }
 }
-=======
->>>>>>> db16b43e8abaf68bed221a5c6e09696df334b8cb
 </style>
