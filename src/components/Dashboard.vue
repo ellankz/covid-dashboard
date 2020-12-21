@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard_wrap">
-    <h1>Covid-19 Tracking Dashboard</h1>
+    <h1 class="dashboard__title">Covid-19 Tracking Dashboard</h1>
     <div v-bind:class="`${layout.baseClass} ${layout.expanded ? `expanded ${layout.block}` : ''}`">
       <Map
         v-if="data"
@@ -49,6 +49,7 @@
         @expandBlock="handleExpand"
         @shrinkBlock="handleShrink" />
     </div>
+    <Footer v-if="data" />
   </div>
 </template>
 
@@ -58,6 +59,7 @@ import Map from './Map.vue';
 import List from './List.vue';
 import Table from './Table.vue';
 import Chart from './Chart.vue';
+import Footer from './Footer.vue';
 
 const TYPES = ['Confirmed', 'Deaths', 'Recovered'];
 // const PERIODS = ['All time', 'New'];
@@ -70,6 +72,7 @@ export default {
     Table,
     Chart,
     List,
+    Footer,
   },
   data() {
     return {
@@ -148,29 +151,35 @@ export default {
         dataPath = this.data.Countries[this.state.country].timeline;
       }
       if (this.state.calcType === 'Per 100k' && this.state.period === 'New') {
-        const newData = TYPES.reduce((acc, type) => {
-          acc[type] = this.dataService.getHistoricalDataForEachDayPer100k(
-            type, this.state.country,
-          );
-          return acc;
-        }, {});
-        dataPath['New Per 100k'] = newData;
+        if (!dataPath['New Per 100k']) {
+          const newData = TYPES.reduce((acc, type) => {
+            acc[type] = this.dataService.getHistoricalDataForEachDayPer100k(
+              type, this.state.country,
+            );
+            return acc;
+          }, {});
+          dataPath['New Per 100k'] = newData;
+        }
       } else if (this.state.calcType === 'Per 100k') {
-        const newData = TYPES.reduce((acc, type) => {
-          acc[type] = this.dataService.getHistoricalDataPer100k(
-            type, this.state.country,
-          );
-          return acc;
-        }, {});
-        dataPath['Per 100k'] = newData;
+        if (!dataPath['Per 100k']) {
+          const newData = TYPES.reduce((acc, type) => {
+            acc[type] = this.dataService.getHistoricalDataPer100k(
+              type, this.state.country,
+            );
+            return acc;
+          }, {});
+          dataPath['Per 100k'] = newData;
+        }
       } else if (this.state.period === 'New') {
-        const newData = TYPES.reduce((acc, type) => {
-          acc[type] = this.dataService.getHistoricalDataForEachDay(
-            type, this.state.country,
-          );
-          return acc;
-        }, {});
-        dataPath.New = newData;
+        if (!dataPath.New) {
+          const newData = TYPES.reduce((acc, type) => {
+            acc[type] = this.dataService.getHistoricalDataForEachDay(
+              type, this.state.country,
+            );
+            return acc;
+          }, {});
+          dataPath.New = newData;
+        }
       }
     },
   },
@@ -178,6 +187,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+  .dashboard__title {
+    margin-top: 0;
+  }
  .map {
     grid-area: map;
   }
@@ -203,6 +215,8 @@ export default {
   .dashboard_wrap {
       padding-left: 0.5rem;
       padding-right: 0.5rem;
+      padding-top: 1.2rem;
+      height: 100vh;
   }
 
   .dashboard {
@@ -213,7 +227,7 @@ export default {
     grid-template-rows: 0.5fr 1fr 1fr;
     grid-template-columns: 5fr calc(30% - 0.25rem);
     grid-gap: 0.5rem;
-    height: 92vh;
+    height: 87vh;
 
     &__element {
       background-color: $color-gray;

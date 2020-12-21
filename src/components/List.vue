@@ -2,39 +2,33 @@
   <div v-bind:class="'container' + expanded === true ? 'list-expanded' : ''">
     <div v-bind:class="`list-wrap ${(expanded === true) ? 'list-expanded' : ''}`">
       <div class="switches">
-        <div class="absolute">
-          <button class="btn" @click = "pressBy100kBtn()">{{ getTotalBtnText }}</button>
-        </div>
-        <div class="all-time">
-          <button class="btn" @click = "pressNewBtn()">{{ getNewButtonText }}</button>
-        </div>
-        <div class="sort">
-          <button class="btn" @click = "toSort()">Sort</button>
-        </div>
+        <ArrowButton
+          v-bind:options="['Sort:high', 'Sort:low', 'Sort:default']"
+          v-bind:currentOption="sortDirection"
+          @updateOption="(direction) => toSort(direction)"
+        />
+        <ArrowButton
+          v-bind:options="['Total', 'Per 100k']"
+          v-bind:currentOption="state.calcType"
+          @updateOption="(calcType) => {$emit('updateCalcType', calcType)}"
+        />
+        <ArrowButton
+          v-bind:options="['All time', 'New']"
+          v-bind:currentOption="state.period"
+          @updateOption="(period) => {$emit('updatePeriod', period)}"
+        />
+        <ArrowButton
+          v-bind:options="['Confirmed', 'Deaths', 'Recovered']"
+          v-bind:currentOption="state.type"
+          @updateOption="(type) => {$emit('updateType', type)}"
+        />
       </div>
-      <div class="radiobuttons">
-        <input type="radio" id="confirmed" name="parameter"
-        v-model="currentType"
-        checked
-        @change="$emit('updateType', 'Confirmed')">
-        <label for="confirmed">Confirmed</label>
-
-        <input type="radio" id="deaths" name="parameter"
-        v-model="currentType"
-        @change="$emit('updateType', 'Deaths')">
-        <label for="deaths">Deaths</label>
-
-        <input type="radio" id="recovered" name="parameter"
-        v-model="currentType"
-        @change="$emit('updateType', 'Recovered')">
-        <label for="recovered">Recovered</label>
-      </div>
-      <input type="text" placeholder="Search country" v-model="search">
+      <input type="text" placeholder="Search country" v-model="search" class="search">
       <ul class="scrolled">
-        <li :key="country" v-for="country in countriesList"
+        <li :key="country" v-for="country in countriesList" class="country_item"
         @click="$emit('updateCountry', {countryCode: country.code})">
           <span>
-            <img :src="flags[country.code].flag" :alt="country.code">
+            <img :src="flags[country.code].flag" :alt="country.code" class="flag">
           </span>
           <span class="country">{{country.country}}: </span>
           <span>{{ getValue(country) }}</span>
@@ -47,12 +41,14 @@
 
 <script>
 import flagsCountries from '../service/countries.json';
+import ArrowButton from './ArrowButton.vue';
 import ExpandButton from './ExpandButton.vue';
 
 export default {
   name: 'List',
   components: {
     ExpandButton,
+    ArrowButton,
   },
   props: {
     data: Object,
@@ -61,25 +57,19 @@ export default {
   },
   data() {
     return {
-      sortParam: '',
       countries: this.data.Countries,
       flags: flagsCountries,
       currentType: this.state.type,
-      isSorted: false,
+      sortDirection: 'Sort:default',
       search: '',
       expanded: false,
     };
   },
   computed: {
-    getNewButtonText() {
-      return this.state.period === 'All time' ? 'New' : 'All time';
-    },
-    getTotalBtnText() {
-      return this.state.calcType === 'Total' ? 'Per 100k' : 'Total';
-    },
     countriesList() {
-      switch (this.sortParam) {
-        case 'toDown': return this.sortedList();
+      switch (this.sortDirection) {
+        case 'Sort:low': return this.sortedList().reverse();
+        case 'Sort:high': return this.sortedList();
         default: return Object.values(this.countries)
           .filter((country) => country.country.toLowerCase().includes(this.search.toLowerCase()));
       }
@@ -93,10 +83,8 @@ export default {
     sortByValue(a, b) {
       return (this.getValue(a) < this.getValue(b)) ? 1 : -1;
     },
-    toSort() {
-      this.isSorted = !this.isSorted;
-      if (!this.isSorted) this.sortParam = 'toDown';
-      else this.sortParam = '';
+    toSort(direction) {
+      this.sortDirection = direction;
     },
     getValue(country) {
       if (this.getStateBtn('All time', 'Total')) {
@@ -112,12 +100,6 @@ export default {
     },
     getStateBtn(period, value) {
       return (this.state.period === period) && (this.state.calcType === value);
-    },
-    pressNewBtn() {
-      this.$emit('updatePeriod', this.state.period === 'All time' ? 'New' : 'All time');
-    },
-    pressBy100kBtn() {
-      this.$emit('updateCalcType', this.state.calcType === 'Total' ? 'Per 100k' : 'Total');
     },
     expandList() {
       this.expanded = true;
@@ -150,18 +132,14 @@ export default {
     margin-bottom: 10px;
   }
 
-  label {
-    margin: 5px;
-  }
-
-  ul {
+  .scrolled {
     overflow: auto;
-    max-height: 15vh;
+    max-height: 12vh;
     width: 80%;
     margin-left: 0;
     padding-left: 0;
 
-    li {
+    .country_item {
       display: flex;
       min-width: 250px;
       transition: background-color 0.2s linear;
@@ -173,7 +151,7 @@ export default {
     }
 }
 
-img {
+.flag {
   margin-right: 10px;
   width: 20px;
 }
@@ -213,6 +191,20 @@ span {
 
   .scrolled {
     max-height: 70vh;
+  }
+}
+
+.search {
+  width: 80%;
+  margin: 0 auto;
+  background-color: $color-black;
+  color: $color-white;
+  border: none;
+  display: block;
+  padding: 0.3rem;
+
+  &:focus {
+    outline: none;
   }
 }
 </style>

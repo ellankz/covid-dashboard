@@ -62,14 +62,23 @@
         <div class="inner-table__title">Recovered</div>
         </div>
       </div>
-      <div class="table__switches">
-          <div>
-            <button class="btn" @click = "pressBy100kBtn()">{{ getTotalBtnText }}</button>
-          </div>
-          <div>
-            <button class="btn" @click = "pressNewBtn()">{{ getNewButtonText }}</button>
-          </div>
+      <div class="table_footer">
+        <div class="table__date">
+          {{ 'Last data: ' + formatDate(data.Global.Summary.Date) }}
         </div>
+        <div class="table__switches">
+          <ArrowButton
+            v-bind:options="['Total', 'Per 100k']"
+            v-bind:currentOption="state.calcType"
+            @updateOption="(calcType) => {$emit('updateCalcType', calcType)}"
+          />
+          <ArrowButton
+            v-bind:options="['All time', 'New']"
+            v-bind:currentOption="state.period"
+            @updateOption="(period) => {$emit('updatePeriod', period)}"
+          />
+        </div>
+      </div>
       <ExpandButton
         v-bind:expanded="expanded"
         @expandClick="expanded ? shrinkTable() : expandTable()"
@@ -79,20 +88,20 @@
 </template>
 
 <script>
+import moment from 'moment';
+import ArrowButton from './ArrowButton.vue';
 import ExpandButton from './ExpandButton.vue';
 import flagsCountries from '../service/countries.json';
 
 export default {
   name: 'Table',
-  created() {
-    this.logData();
-  },
   props: {
     data: Object,
     state: Object,
   },
   components: {
     ExpandButton,
+    ArrowButton,
   },
   data() {
     return {
@@ -126,23 +135,9 @@ export default {
       if (this.state.country === null) return this.data.Global.Summary.NewPer100k;
       return this.data.Countries[this.state.country].timeline.Summary.NewPer100k;
     },
-    getNewButtonText() {
-      return this.state.period === 'All time' ? 'New' : 'All time';
-    },
-    getTotalBtnText() {
-      return this.state.calcType === 'Total' ? 'Per 100k' : 'Total';
-    },
+
   },
   methods: {
-    logData() {
-      console.log(this.data);
-    },
-    pressNewBtn() {
-      this.$emit('updatePeriod', this.state.period === 'All time' ? 'New' : 'All time');
-    },
-    pressBy100kBtn() {
-      this.$emit('updateCalcType', this.state.calcType === 'Total' ? 'Per 100k' : 'Total');
-    },
     getStateBtn(period, value) {
       return (this.state.period === period) && (this.state.calcType === value);
     },
@@ -153,6 +148,9 @@ export default {
     shrinkTable() {
       this.expanded = false;
       this.$emit('shrinkBlock');
+    },
+    formatDate(date) {
+      return moment(date).format('DD.MM.YYYY');
     },
   },
 };
@@ -182,10 +180,8 @@ export default {
 }
 
 .table__switches {
-  padding: 5px;
   display: flex;
   justify-content: flex-end;
-  margin-top: 0.5rem;
 }
 .table__caption {
   text-align: right;
@@ -193,11 +189,27 @@ export default {
 }
 .inner-table {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  padding: 0 1rem;
+
 }
 
 .inner-table__cases-number {
   font-size: 1.8rem;
   line-height: 2.5rem;
+}
+
+.table_footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 1rem;
+  padding: 0 1rem;
+}
+
+.table__date {
+  font-size: 1.2rem;
+  color: $color-gray-2;
 }
 </style>

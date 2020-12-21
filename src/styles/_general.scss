@@ -11,6 +11,7 @@ body {
   line-height: 120%;
   background-color: $color-black;
   color: $color-white;
+  margin: 0;
 }
 
 .btn {
@@ -40,8 +41,9 @@ body {
   }
 }
 
+
 .expand-toggle {
-  border: 1px solid $color-gray-1;
+  border: 1px solid $color-white;
   border-radius: 50%;
   top: -0.5rem;
   right: -0.5rem;
