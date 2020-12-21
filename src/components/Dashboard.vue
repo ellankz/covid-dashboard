@@ -41,9 +41,13 @@
         v-bind:data="data"
         v-bind:loadingState="loadingState"
         v-bind:state="state"
+        @updateCountry="handleUpdateCountry"
+        @updateType="handleUpdateType"
         @updateCalcType="handleUpdateCalcType"
         @updatePeriod="handleUpdatePeriod"
-        @updateChartTypes="handleUpdateChartTypes"/>
+        @updateChartTypes="handleUpdateChartTypes"
+        @expandBlock="handleExpand"
+        @shrinkBlock="handleShrink" />
     </div>
   </div>
 </template>
@@ -255,6 +259,20 @@ export default {
       }
 
       .table {
+        width: 100%;
+      }
+    }
+
+    &.expanded.list {
+      grid-template-areas: "list list"
+                           "list list"
+                           "list list";
+
+      .map, .chart, .table {
+        display: none;
+      }
+
+      .list {
         width: 100%;
       }
     }
