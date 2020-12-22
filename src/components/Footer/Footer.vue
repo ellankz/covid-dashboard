@@ -1,5 +1,8 @@
 <template>
   <footer class="footer">
+    <div class="footer__date">
+      {{ 'Last data: ' + formatDate(data.Global.Summary.Date) }}
+    </div>
     <div class="footer__text">
       <span>Made by </span>
       <a class="footer__github-link" v-bind:href="`https://github.com/${gihubNames[0]}/`" target="_blank">{{ gihubNames[0] }}</a>
@@ -17,39 +20,57 @@
 </template>
 
 <script>
-import logo from '../../assets/rs-school-logo.svg';
+import moment from 'moment';
+import logo from '../../assets/rs-school-logo.png';
 
 const GIHUB_NAME_1 = 'ellankz';
 const GIHUB_NAME_2 = 'aazubakin';
 
 export default {
   name: 'Footer',
+  props: {
+    data: Object,
+    state: Object,
+  },
   data() {
     return {
       logo,
       gihubNames: [GIHUB_NAME_1, GIHUB_NAME_2],
     };
   },
-  created() {},
-  props: {
+  methods: {
+    formatDate(date) {
+      return moment(date).format('DD.MM.YYYY');
+    },
   },
-  methods: {},
 };
 </script>
 
 <style scoped lang="scss">
 .footer {
-  background-color: $color-gray;
-  border-radius: 5px;
-  padding: 0.5rem;
   margin-top: 0.5rem;
   text-align: right;
-  height: calc(6vh - 0.5rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 0.8rem;
+
+  a, span {
+    display: inline-block;
+    margin-right: 0.2rem;
+  }
+
+  &__text {
+    display: flex;
+    align-items: flex-end;
+  }
+
+  &__rs-school-link {
+    display: inline-block;
+  }
 
   &__rs-school-logo {
-    max-width: 4rem;
-    display: inline-block;
-    vertical-align: baseline;
+    width: 3rem;
 
     &::before {
       content: ' ';
@@ -62,6 +83,11 @@ export default {
     &:hover {
       color: $color-gray-1;
     }
+  }
+
+  &__date {
+    font-size: 0.8rem;
+    color: $color-gray-2;
   }
 }
 </style>

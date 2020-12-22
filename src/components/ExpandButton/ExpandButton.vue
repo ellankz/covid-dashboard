@@ -37,10 +37,15 @@ export default {
     width: 18px;
     min-width: auto;
     padding: 2px;
+    transition: background-color 0.2s linear;
 
     img {
       height: 12px;
       width: 12px;
+    }
+
+    &:hover {
+      background-color: darken($color-gray-1, 10%);
     }
   }
 </style>
