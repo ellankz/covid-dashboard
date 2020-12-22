@@ -165,6 +165,7 @@ export default {
 
 .table__flag {
   width: 2rem;
+  max-height: 22px;
   margin-left: 0.5rem;
 }
 
