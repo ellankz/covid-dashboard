@@ -23,32 +23,45 @@
           @updateOption="(type) => {$emit('updateType', type)}"
         />
       </div>
-      <input type="text" placeholder="Search country" v-model="search" class="search">
+      <div class="search-field">
+        <input type="text"
+          placeholder="Search country"
+          v-model="search"
+          class="search"
+          @focus="(event) => updateSearch(event)"
+          id="search-input" />
+        <button class="keyboard-toggle" id="keyboard-toggle">
+          <i class="material-icons">keyboard</i>
+        </button>
+      </div>
       <ul class="scrolled">
         <li :key="country" v-for="country in countriesList" class="country_item"
         @click="$emit('updateCountry', {countryCode: country.code})">
           <span>
             <img :src="flags[country.code].flag" :alt="country.code" class="flag">
           </span>
-          <span class="country">{{country.country}}: </span>
+          <span class="country">{{country.country}} </span>
           <span>{{ getValue(country) }}</span>
         </li>
       </ul>
     </div>
     <ExpandButton v-bind:expanded="expanded" @expandClick="expanded ? shrinkList() : expandList()"/>
+    <Keyboard inputId="search-input" toggleId="keyboard-toggle" />
   </div>
 </template>
 
 <script>
-import flagsCountries from '../service/countries.json';
-import ArrowButton from './ArrowButton.vue';
-import ExpandButton from './ExpandButton.vue';
+import flagsCountries from '../../service/countries.json';
+import ArrowButton from '../ArrowButton/ArrowButton.vue';
+import ExpandButton from '../ExpandButton/ExpandButton.vue';
+import Keyboard from '../Keyboard/Keyboard.vue';
 
 export default {
   name: 'List',
   components: {
     ExpandButton,
     ArrowButton,
+    Keyboard,
   },
   props: {
     data: Object,
@@ -67,6 +80,7 @@ export default {
   },
   computed: {
     countriesList() {
+      console.log('1');
       switch (this.sortDirection) {
         case 'Sort:low': return this.sortedList().reverse();
         case 'Sort:high': return this.sortedList();
@@ -76,7 +90,11 @@ export default {
     },
   },
   methods: {
+    updateSearch(event) {
+      this.search = event.target.value;
+    },
     sortedList() {
+      console.log('3');
       return Object.values(this.countries).sort(this.sortByValue)
         .filter((country) => country.country.toLowerCase().includes(this.search.toLowerCase()));
     },
@@ -134,7 +152,7 @@ export default {
 
   .scrolled {
     overflow: auto;
-    max-height: 12vh;
+    max-height: 14vh;
     width: 80%;
     margin-left: 0;
     padding-left: 0;
@@ -158,6 +176,10 @@ export default {
 
 span {
   margin-right: 10px;
+}
+
+.country {
+  margin-right: auto;
 }
 
 .scrolled {
@@ -194,14 +216,35 @@ span {
   }
 }
 
-.search {
+.search-field {
+  position: relative;
   width: 80%;
   margin: 0 auto;
+}
+
+.keyboard-toggle {
+  position: absolute;
+  top: 0;
+  right: 0.5rem;
+  font-size: 0.8rem;
+  background: transparent;
+  padding: 0;
+  border: 0;
+  color: $color-white;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.search {
   background-color: $color-black;
   color: $color-white;
   border: none;
   display: block;
   padding: 0.3rem;
+  width: 100%;
 
   &:focus {
     outline: none;

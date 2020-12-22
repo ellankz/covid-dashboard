@@ -89,9 +89,9 @@
 
 <script>
 import moment from 'moment';
-import ArrowButton from './ArrowButton.vue';
-import ExpandButton from './ExpandButton.vue';
-import flagsCountries from '../service/countries.json';
+import ArrowButton from '../ArrowButton/ArrowButton.vue';
+import ExpandButton from '../ExpandButton/ExpandButton.vue';
+import flagsCountries from '../../service/countries.json';
 
 export default {
   name: 'Table',
@@ -165,13 +165,14 @@ export default {
 
 .table__flag {
   width: 2rem;
+  max-height: 22px;
   margin-left: 0.5rem;
 }
 
 .table__options {
   display: flex;
   align-items: baseline;
-  margin-bottom: 15px;
+  margin-bottom: 0;
   justify-content: space-between;
   padding: 0 1rem;
 }

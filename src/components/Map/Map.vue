@@ -26,8 +26,8 @@
 
 <script>
 import { DrawMap } from './DrawMap';
-import ExpandButton from './ExpandButton.vue';
-import ArrowButton from './ArrowButton.vue';
+import ExpandButton from '../ExpandButton/ExpandButton.vue';
+import ArrowButton from '../ArrowButton/ArrowButton.vue';
 
 export default {
   name: 'Map',

@@ -1,7 +1,7 @@
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-easybutton';
-import countries from '../service/geoCountries.json';
+import countries from '../../service/geoCountries.json';
 
 const SOUTH_WEST_DISPLAY_BOUND = -89.98155760646617;
 const NORTH_EAST_DISPLAY_BOUND = 89.99346179538875;
