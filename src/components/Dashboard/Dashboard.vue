@@ -1,9 +1,11 @@
 <template>
   <div class="dashboard_wrap">
     <h1 class="dashboard__title">Covid-19 Tracking Dashboard</h1>
-    <div v-bind:class="`${layout.baseClass} ${layout.expanded ? `expanded ${layout.block}` : ''}`">
+    <Loader v-if="!data" />
+    <div
+      v-bind:class="`${layout.baseClass} ${layout.expanded ? `expanded ${layout.block}` : ''}`"
+      v-if="data">
       <Map
-        v-if="data"
         v-bind:data="data"
         v-bind:loadingState="loadingState"
         v-bind:state="state"
@@ -16,7 +18,6 @@
         class="map dashboard__element" />
       <Table
         class="table dashboard__element"
-        v-if="data"
         v-bind:data="data"
         v-bind:loadingState="loadingState"
         v-bind:state="state"
@@ -26,7 +27,6 @@
         @shrinkBlock="handleShrink"
         @expandBlock="handleExpand" />
       <Chart
-        v-if="data"
         v-bind:data="data"
         v-bind:loadingState="loadingState"
         v-bind:state="state"
@@ -37,7 +37,6 @@
         @shrinkBlock="handleShrink"
         class="chart dashboard__element" />
       <List class="list dashboard__element"
-        v-if="data"
         v-bind:data="data"
         v-bind:loadingState="loadingState"
         v-bind:state="state"
@@ -49,7 +48,7 @@
         @expandBlock="handleExpand"
         @shrinkBlock="handleShrink" />
     </div>
-    <Footer v-if="data" />
+    <Footer v-if="data" v-bind:data="data" />
   </div>
 </template>
 
@@ -60,6 +59,7 @@ import List from '../List/List.vue';
 import Table from '../Table/Table.vue';
 import Chart from '../Chart/Chart.vue';
 import Footer from '../Footer/Footer.vue';
+import Loader from '../Loader/Loader.vue';
 
 const TYPES = ['Confirmed', 'Deaths', 'Recovered'];
 // const PERIODS = ['All time', 'New'];
@@ -73,6 +73,7 @@ export default {
     Chart,
     List,
     Footer,
+    Loader,
   },
   data() {
     return {
@@ -188,7 +189,17 @@ export default {
 
 <style scoped lang="scss">
   .dashboard__title {
-    margin-top: 0;
+    margin-top: 3px;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+
+      @media (max-width: $breakpoint-width-1) {
+        font-size: 1.6rem;
+      }
+
+      @media (max-width: $breakpoint-width-1) {
+        margin-bottom: 0.7rem;
+      }
   }
  .map {
     grid-area: map;
@@ -213,6 +224,13 @@ export default {
       padding-right: 0.5rem;
       padding-top: 1.2rem;
       height: 100vh;
+      padding-top: 0.7rem;
+      padding-bottom: 0.4rem;
+
+      @media (max-width: $breakpoint-width-1) {
+        padding-bottom: 0.7rem;
+        padding-top: 0.4rem;
+      }
   }
 
   .dashboard {
@@ -220,10 +238,24 @@ export default {
     grid-template-areas: "map table"
                          "map chart"
                          "map list";
-    grid-template-rows: 0.5fr 1fr 1fr;
     grid-template-columns: 5fr calc(30% - 0.25rem);
+    grid-template-rows: 0.5fr 1fr 1fr;
     grid-gap: 0.5rem;
     height: 87vh;
+
+    @media (max-width: $breakpoint-width-1) {
+      grid-template-columns: 5fr calc(25% - 0.25rem);
+      grid-template-rows: 0.5fr 0.5fr 1fr;
+      height: 90vh;
+    }
+
+    @media (max-width: $breakpoint-width-2) {
+      grid-template-columns: 1fr calc(33% - 0.25rem) 1fr;
+      grid-template-rows: 1fr 4fr;
+      grid-template-areas: "list chart table"
+                         "list map map";
+      height: 90vh;
+    }
 
     &__element {
       background-color: $color-gray;
@@ -288,6 +320,60 @@ export default {
       }
     }
 
+    @media (max-width: $breakpoint-width-2) {
+      grid-template-columns: 1fr calc(33% - 0.25rem) 1fr;
+      grid-template-rows: 1fr 4fr;
+      grid-template-areas: "list chart table"
+                           "list map map";
+      height: 90vh;
+
+      &.expanded.map {
+      grid-template-areas: "map map map"
+                           "map map map"
+                           "map map map";
+      }
+
+      &.expanded.chart {
+      grid-template-areas: "chart chart chart"
+                           "chart chart chart"
+                           "chart chart chart";
+      }
+
+      &.expanded.table {
+      grid-template-areas: "table table table"
+                           "table table table"
+                           "table table table";
+      }
+
+      &.expanded.list {
+      grid-template-areas: "list list list"
+                           "list list list"
+                           "list list list";
+      }
+    }
+
+    @media (max-width: $breakpoint-width-4) {
+      grid-template-columns: 1fr calc(60% - 0.25rem);
+      grid-template-rows: 1fr 1fr auto;
+      grid-template-areas: "list chart"
+                           "list table"
+                           "map map";
+      height: auto;
+    }
+
+    @media (max-width: $breakpoint-width-4) and (min-height: 800px) {
+          grid-template-rows: 1fr 0.6fr auto;
+    }
+
+    @media (max-width: $breakpoint-width-5) {
+      grid-template-columns: 1fr;
+      grid-template-rows: 0.5fr 1.5fr 1fr auto;
+      grid-template-areas: "table"
+                           "list"
+                           "chart"
+                           "map";
+      height: auto;
+    }
   }
 
 </style>

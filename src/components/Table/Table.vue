@@ -7,7 +7,7 @@
         <img class="table__flag" v-if="state.country" :src="flagPath" :alt="currentCountry">
         </h2>
         <div class="table__caption">
-          <strong>{{state.calcType}} for {{state.period.toLowerCase()}} period</strong>
+          <strong>{{state.calcType}} {{state.period}}</strong>
         </div>
       </div>
       <div class="inner-table">
@@ -63,9 +63,6 @@
         </div>
       </div>
       <div class="table_footer">
-        <div class="table__date">
-          {{ 'Last data: ' + formatDate(data.Global.Summary.Date) }}
-        </div>
         <div class="table__switches">
           <ArrowButton
             v-bind:options="['Total', 'Per 100k']"
@@ -88,7 +85,6 @@
 </template>
 
 <script>
-import moment from 'moment';
 import ArrowButton from '../ArrowButton/ArrowButton.vue';
 import ExpandButton from '../ExpandButton/ExpandButton.vue';
 import flagsCountries from '../../service/countries.json';
@@ -149,9 +145,6 @@ export default {
       this.expanded = false;
       this.$emit('shrinkBlock');
     },
-    formatDate(date) {
-      return moment(date).format('DD.MM.YYYY');
-    },
   },
 };
 </script>
@@ -167,6 +160,12 @@ export default {
   width: 2rem;
   max-height: 22px;
   margin-left: 0.5rem;
+}
+
+.table__location {
+  @media (max-width: $breakpoint-width-1) {
+    margin-top: 0.5rem;
+  }
 }
 
 .table__options {
@@ -198,6 +197,10 @@ export default {
 .inner-table__cases-number {
   font-size: 1.8rem;
   line-height: 2.5rem;
+
+  @media (max-width: $breakpoint-width-1) {
+    font-size: 1.3rem;
+  }
 }
 
 .table_footer {
@@ -209,8 +212,4 @@ export default {
   padding: 0 1rem;
 }
 
-.table__date {
-  font-size: 1.2rem;
-  color: $color-gray-2;
-}
 </style>

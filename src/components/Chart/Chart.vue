@@ -232,18 +232,31 @@ export default {
     max-width: 50rem;
     margin: 0.5rem auto 0;
 
+    @media (max-width: $breakpoint-width-3) {
+      margin: 0.2rem auto 0;
+    }
+
     &__checkboxes {
       input {
         margin-right: 0.5rem;
+
       }
 
       label {
         margin-right: 0.8rem;
+
+        @media (max-width: $breakpoint-width-3) {
+          font-size: 0.8rem;
+        }
       }
     }
 
     &__buttons {
       margin-top: 0.5rem;
+
+      @media (max-width: $breakpoint-width-3) {
+        margin-top: 0;
+      }
     }
   }
 </style>

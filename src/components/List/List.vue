@@ -80,7 +80,6 @@ export default {
   },
   computed: {
     countriesList() {
-      console.log('1');
       switch (this.sortDirection) {
         case 'Sort:low': return this.sortedList().reverse();
         case 'Sort:high': return this.sortedList();
@@ -94,7 +93,6 @@ export default {
       this.search = event.target.value;
     },
     sortedList() {
-      console.log('3');
       return Object.values(this.countries).sort(this.sortByValue)
         .filter((country) => country.country.toLowerCase().includes(this.search.toLowerCase()));
     },
@@ -143,19 +141,47 @@ export default {
   .switches {
     padding: 5px;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
     margin-bottom: 10px;
+
+    @media (max-width: $breakpoint-width-1) {
+      margin-bottom: 0;
+    }
   }
 
   .radiobuttons {
     margin-bottom: 10px;
   }
 
-  .scrolled {
+  .list-wrap .scrolled {
     overflow: auto;
-    max-height: 14vh;
+    max-height: 16vh;
     width: 80%;
     margin-left: 0;
     padding-left: 0;
+    margin: 1rem auto;
+
+    @media (max-width: $breakpoint-width-1) {
+      max-height: 11vh;
+      margin-bottom: 0;
+    }
+
+    @media (max-width: $breakpoint-width-2) {
+      max-height: 70vh;
+    }
+
+    @media (max-width: $breakpoint-width-2) {
+      width: 95%;
+    }
+
+    @media (max-width: $breakpoint-width-4) and (min-height: 900px) {
+      max-height: 57vh;
+    }
+
+    @media (max-width: $breakpoint-width-4) and (min-height: 1000px) {
+      max-height: 45vh;
+    }
 
     .country_item {
       display: flex;
@@ -200,16 +226,9 @@ span {
 
 }
 
-.list-wrap {
-  margin: 0 auto;
-
-  .scrolled {
-      margin: 1rem auto;
-  }
-}
-
 .list-expanded {
   max-width: 500px;
+  margin: 0 auto;
 
   .scrolled {
     max-height: 70vh;

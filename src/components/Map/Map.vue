@@ -96,7 +96,16 @@ export default {
   #map-container {
     height: 81vh;
     width: 100%;
+
+    @media (max-width: $breakpoint-width-2) {
+      height: 50vh;
+    }
+
+    .expanded.map & {
+      height: 81vh;
+    }
   }
+
   .leaflet-container {
     background: $color-gray;
     outline: 0;
@@ -128,9 +137,19 @@ export default {
     border: none;
     height: 30px;
     border-radius: 2px;
+    transition: background-color 0.2s linear;
+
+    &:hover {
+      background-color: #f4f4f4;
+
+      .legend-toggle {
+        color: #bbbbbb;
+      }
+    }
   }
 
   .legend-toggle {
+    transition: color 0.2s linear;
     font-size: 1.5em;
   }
 
