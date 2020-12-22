@@ -23,6 +23,7 @@ export class DrawMap {
     this.markers = [];
     this.scale = [0, 1e4, 5e4, 1e5, 5e5, 1e6, 5e6, 1e7];
     this.isLegendVisible = false;
+    this.mapModeMarkers = true;
     this.onCountryClick = onCountryClick;
   }
 
@@ -139,20 +140,40 @@ export class DrawMap {
   }
 
   addMarkers = () => {
-    this.map.eachLayer((layer) => {
-      if (layer.feature?.geometry) {
-        const center = layer.feature.id === 'RUS'
-          ? { lat: 60.793196, lng: 92.003289 } : layer.getBounds().getCenter();
-        const marker = L.circleMarker(center, {
-          radius: 6,
-          color: this.getColorByCountry(layer.feature.id),
-          fillOpacity: 0.7,
-          weight: 1,
-          interactive: false,
-        }).addTo(this.map);
-        this.markers.push(marker);
-      }
-    });
+    if (this.mapModeMarkers) {
+      this.map.eachLayer((layer) => {
+        if (layer.feature?.geometry) {
+          layer.setStyle({
+            fillColor: 'transparent',
+            color: 'grey',
+          });
+        }
+      });
+      this.map.eachLayer((layer) => {
+        if (layer.feature?.geometry) {
+          const center = layer.feature.id === 'RUS'
+            ? { lat: 60.793196, lng: 92.003289 } : layer.getBounds().getCenter();
+          const marker = L.circleMarker(center, {
+            radius: 6,
+            color: this.getColorByCountry(layer.feature.id),
+            fillOpacity: 0.7,
+            weight: 1,
+            interactive: false,
+          }).addTo(this.map);
+          this.markers.push(marker);
+        }
+      });
+    } else {
+      this.map.eachLayer((layer) => {
+        if (layer.feature?.geometry) {
+          const color = this.getColorByCountry(layer.feature?.id);
+          layer.setStyle({
+            fillColor: color,
+            color,
+          });
+        }
+      });
+    }
   };
 
   replaceMarkers() {
@@ -163,20 +184,25 @@ export class DrawMap {
 
   addCountryFillOnHover = () => {
     const context = this;
+
     this.map.eachLayer((layer) => {
       if (layer.feature?.geometry) {
         layer.on('mouseover', function onMouseOver() {
-          const color = context.getColorByCountry(layer.feature?.id);
-          this.setStyle({
-            fillColor: color,
-            color,
-          });
+          if (context.mapModeMarkers) {
+            const color = context.getColorByCountry(layer.feature?.id);
+            this.setStyle({
+              fillColor: color,
+              color,
+            });
+          }
         });
         layer.on('mouseout', function onMouseOut() {
-          this.setStyle({
-            fillColor: 'transparent',
-            color: 'grey',
-          });
+          if (context.mapModeMarkers) {
+            this.setStyle({
+              fillColor: 'transparent',
+              color: 'grey',
+            });
+          }
         });
       }
     });
@@ -245,6 +271,11 @@ export class DrawMap {
       } else {
         this.legend.remove();
       }
+    }).addTo(classContext.map);
+
+    L.easyButton('<span class="map-mode-toggle">◕</span>', () => {
+      this.mapModeMarkers = !this.mapModeMarkers;
+      this.update(this.state);
     }).addTo(classContext.map);
   }
 
