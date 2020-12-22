@@ -142,15 +142,16 @@ export default {
     &:hover {
       background-color: #f4f4f4;
 
-      .legend-toggle {
+      .legend-toggle, .map-mode-toggle {
         color: #bbbbbb;
       }
     }
   }
 
-  .legend-toggle {
+  .legend-toggle, .map-mode-toggle {
     transition: color 0.2s linear;
-    font-size: 1.5em;
+    font-size: 1.2rem;
+    line-height: 1.2rem;
   }
 
   .legend {

@@ -264,6 +264,11 @@ export class DrawMap {
       return div;
     };
 
+    L.easyButton('<span class="map-mode-toggle">◕</span>', () => {
+      this.mapModeMarkers = !this.mapModeMarkers;
+      this.update(this.state);
+    }).addTo(classContext.map);
+
     L.easyButton('<span class="legend-toggle">&equiv;</span>', () => {
       this.isLegendVisible = !this.isLegendVisible;
       if (this.isLegendVisible) {
@@ -271,11 +276,6 @@ export class DrawMap {
       } else {
         this.legend.remove();
       }
-    }).addTo(classContext.map);
-
-    L.easyButton('<span class="map-mode-toggle">◕</span>', () => {
-      this.mapModeMarkers = !this.mapModeMarkers;
-      this.update(this.state);
     }).addTo(classContext.map);
   }
 
