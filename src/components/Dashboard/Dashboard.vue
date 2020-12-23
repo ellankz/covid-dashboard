@@ -241,7 +241,7 @@ export default {
     grid-template-columns: 5fr calc(30% - 0.25rem);
     grid-template-rows: 0.5fr 1fr 1fr;
     grid-gap: 0.5rem;
-    height: 87vh;
+    height: 88vh;
 
     @media (max-width: $breakpoint-width-1) {
       grid-template-columns: 5fr calc(25% - 0.25rem);

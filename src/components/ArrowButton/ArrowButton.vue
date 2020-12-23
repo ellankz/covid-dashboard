@@ -41,10 +41,11 @@ export default {
   transition: color 0.2s linear;
   font-size: 1.1rem;
   color: $color-blue-2;
+  min-width: 108px;
 
   @media (max-width: $breakpoint-width-1) {
     font-size: 1rem;
-    min-width: 86px;
+    min-width: 108px;
   }
 
   &::after, &::before {

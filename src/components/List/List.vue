@@ -3,11 +3,6 @@
     <div v-bind:class="`list-wrap ${(expanded === true) ? 'list-expanded' : ''}`">
       <div class="switches">
         <ArrowButton
-          v-bind:options="['Sort:high', 'Sort:low', 'Sort:default']"
-          v-bind:currentOption="sortDirection"
-          @updateOption="(direction) => toSort(direction)"
-        />
-        <ArrowButton
           v-bind:options="['Total', 'Per 100k']"
           v-bind:currentOption="state.calcType"
           @updateOption="(calcType) => {$emit('updateCalcType', calcType)}"
@@ -21,6 +16,11 @@
           v-bind:options="['Confirmed', 'Deaths', 'Recovered']"
           v-bind:currentOption="state.type"
           @updateOption="(type) => {$emit('updateType', type)}"
+        />
+        <ArrowButton
+          v-bind:options="['Sort:high', 'Sort:low', 'Sort:default']"
+          v-bind:currentOption="sortDirection"
+          @updateOption="(direction) => toSort(direction)"
         />
       </div>
       <div class="search-field">
