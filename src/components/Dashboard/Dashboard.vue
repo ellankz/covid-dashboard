@@ -5,46 +5,37 @@
     <div
       v-bind:class="`${layout.baseClass} ${layout.expanded ? `expanded ${layout.block}` : ''}`"
       v-if="data">
-      <Map
+      <Map class="map dashboard__element"
         v-bind:data="data"
-        v-bind:loadingState="loadingState"
         v-bind:state="state"
         @updateType="handleUpdateType"
         @updateCalcType="handleUpdateCalcType"
         @updatePeriod="handleUpdatePeriod"
         @updateCountry="handleUpdateCountry"
         @expandBlock="handleExpand"
-        @shrinkBlock="handleShrink"
-        class="map dashboard__element" />
-      <Table
-        class="table dashboard__element"
+        @shrinkBlock="handleShrink" />
+      <Table class="table dashboard__element"
         v-bind:data="data"
-        v-bind:loadingState="loadingState"
         v-bind:state="state"
         @updateCalcType="handleUpdateCalcType"
         @updatePeriod="handleUpdatePeriod"
-        @updateChartTypes="handleUpdateChartTypes"
         @shrinkBlock="handleShrink"
         @expandBlock="handleExpand" />
-      <Chart
+      <Chart class="chart dashboard__element"
         v-bind:data="data"
-        v-bind:loadingState="loadingState"
         v-bind:state="state"
         @updateCalcType="handleUpdateCalcType"
         @updatePeriod="handleUpdatePeriod"
         @updateChartTypes="handleUpdateChartTypes"
         @expandBlock="handleExpand"
-        @shrinkBlock="handleShrink"
-        class="chart dashboard__element" />
+        @shrinkBlock="handleShrink" />
       <List class="list dashboard__element"
         v-bind:data="data"
-        v-bind:loadingState="loadingState"
         v-bind:state="state"
         @updateCountry="handleUpdateCountry"
         @updateType="handleUpdateType"
         @updateCalcType="handleUpdateCalcType"
         @updatePeriod="handleUpdatePeriod"
-        @updateChartTypes="handleUpdateChartTypes"
         @expandBlock="handleExpand"
         @shrinkBlock="handleShrink" />
     </div>
@@ -62,8 +53,6 @@ import Footer from '../Footer/Footer.vue';
 import Loader from '../Loader/Loader.vue';
 
 const TYPES = ['Confirmed', 'Deaths', 'Recovered'];
-// const PERIODS = ['All time', 'New'];
-// const CALC_TYPES = ['Total', 'Per 100k'];
 
 export default {
   name: 'Dashboard',
@@ -77,10 +66,6 @@ export default {
   },
   data() {
     return {
-      loadingState: {
-        loading: false,
-        error: null,
-      },
       data: null,
       dataService: new DataService(),
       state: {
@@ -102,14 +87,9 @@ export default {
   },
   methods: {
     fetchData() {
-      this.loadingState.loading = true;
       this.dataService.init().then((res) => {
         this.data = res;
-        this.loadingState.loading = false;
-        console.log(this.data);
       }).catch((err) => {
-        this.loadingState.error = err.toString();
-        this.loadingState.loading = false;
         throw err;
       });
     },
@@ -195,11 +175,9 @@ export default {
 
       @media (max-width: $breakpoint-width-1) {
         font-size: 1.6rem;
-      }
-
-      @media (max-width: $breakpoint-width-1) {
         margin-bottom: 0.7rem;
       }
+
   }
  .map {
     grid-area: map;
@@ -246,14 +224,6 @@ export default {
     @media (max-width: $breakpoint-width-1) {
       grid-template-columns: 5fr calc(25% - 0.25rem);
       grid-template-rows: 0.5fr 0.5fr 1fr;
-      height: 90vh;
-    }
-
-    @media (max-width: $breakpoint-width-2) {
-      grid-template-columns: 1fr calc(33% - 0.25rem) 1fr;
-      grid-template-rows: 1fr 4fr;
-      grid-template-areas: "list chart table"
-                         "list map map";
       height: 90vh;
     }
 

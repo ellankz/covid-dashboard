@@ -45,7 +45,6 @@ export default {
   },
   props: {
     data: Object,
-    loadingState: Object,
     state: Object,
   },
   watch: {

@@ -65,7 +65,6 @@ export default {
   },
   props: {
     data: Object,
-    loadingState: Object,
     state: Object,
   },
   data() {
@@ -162,7 +161,7 @@ export default {
     padding-left: 0;
     margin: 1rem auto;
 
-    @media (max-width: $breakpoint-width-1) {
+    @media (max-width: $breakpoint-width-1) and (max-height: 800px) {
       max-height: 11vh;
       margin-bottom: 0;
     }

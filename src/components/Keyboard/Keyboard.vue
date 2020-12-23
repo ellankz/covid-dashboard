@@ -23,7 +23,7 @@ export default {
 #keyboard-container {
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   font-size: 14px;
-  background-color: #eee;
+  // background-color: #eee;
 }
 
 .use-keyboard-input {
@@ -50,17 +50,17 @@ export default {
   display: block;
   width: 300px;
   margin: 0 auto;
-  background: lighten($color-black, 5%); /* fallback for old browsers */
+  background: lighten($color-black, 5%);
   background: -webkit-linear-gradient(
     to right,
     $color-gray-3,
     lighten($color-black, 5%)
-  ); /* Chrome 10-25, Safari 5.1-6 */
+  );
   background: linear-gradient(
     to right,
     $color-gray-3,
     lighten($color-black, 5%)
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  );
   color: #fff;
   border: none;
   box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14),
@@ -99,17 +99,17 @@ export default {
   box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.2),
     0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12);
   border-radius: 3px;
-  background: lighten($color-black, 5%); /* fallback for old browsers */
+  background: lighten($color-black, 5%);
   background: -webkit-linear-gradient(
     to right,
     $color-gray-3,
     lighten($color-black, 5%)
-  ); /* Chrome 10-25, Safari 5.1-6 */
+  );
   background: linear-gradient(
     to right,
     $color-gray-3,
     lighten($color-black, 5%)
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  );
 
   @media (max-width: $breakpoint-width-2) {
     transform: translateX(-30%);
@@ -138,7 +138,7 @@ export default {
   border-radius: 4px;
   border: none;
   background-color: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  color: $color-white;
   font-size: 1.05rem;
   outline: none;
   cursor: pointer;
@@ -192,7 +192,7 @@ export default {
 }
 
 .keyboard__key--active::after {
-  background: #08ff00;
+  background: $color-green;
 }
 
 .keyboard__key--dark {
