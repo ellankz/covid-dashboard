@@ -20,9 +20,9 @@
               +{{ getLastDayData.Confirmed.toLocaleString() }}
             </span>
             <span v-else-if ="getStateBtn('All time', 'Per 100k')">
-              {{ getTotalBy100k.Confirmed.toFixed(2) }}</span>
+              {{ getTotalBy100k.Confirmed.toFixed(3) }}</span>
             <span v-else>
-              +{{ getLastDayBy100k.Confirmed.toFixed(2) }}
+              +{{ getLastDayBy100k.Confirmed.toFixed(3) }}
             </span>
           </div>
           <div class="inner-table__title">Cases</div>
@@ -36,10 +36,10 @@
               +{{ getLastDayData.Deaths.toLocaleString() }}
             </span>
             <span v-else-if ="getStateBtn('All time', 'Per 100k')">
-              {{ getTotalBy100k.Deaths.toFixed(2) }}
+              {{ getTotalBy100k.Deaths.toFixed(3) }}
             </span>
             <span v-else>
-              +{{ getLastDayBy100k.Deaths.toFixed(2) }}
+              +{{ getLastDayBy100k.Deaths.toFixed(3) }}
             </span>
           </div>
           <div class="inner-table__title">Deaths</div>
@@ -53,10 +53,10 @@
               +{{ getLastDayData.Recovered.toLocaleString() }}
             </span>
             <span v-else-if ="getStateBtn('All time', 'Per 100k')">
-              {{ getTotalBy100k.Recovered.toFixed(2) }}
+              {{ getTotalBy100k.Recovered.toFixed(3) }}
             </span>
             <span v-else>
-              +{{ getLastDayBy100k.Recovered.toFixed(2) }}
+              +{{ getLastDayBy100k.Recovered.toFixed(3) }}
             </span>
           </div>
         <div class="inner-table__title">Recovered</div>

@@ -48,6 +48,8 @@ import countries from '../../service/countries.json';
 const COLOR_BLUE = '#0075ff';
 const COLOR_RED = 'red';
 const COLOR_GREEN = 'green';
+const WHITE_LOW_TRANSPARENT = 'rgba(255, 255, 255, 0.8)';
+const WHITE_HIGH_TRANSPARENT = 'rgba(255, 255, 255, 0.2)';
 
 export default {
   name: 'Chart',
@@ -96,11 +98,11 @@ export default {
                 callback(label) {
                   return formatNumber(label);
                 },
-                fontColor: 'rgba(255, 255, 255, 0.8)',
+                fontColor: WHITE_LOW_TRANSPARENT,
               },
               gridLines: {
                 display: true,
-                color: 'rgba(255, 255, 255, 0.2)',
+                color: WHITE_HIGH_TRANSPARENT,
               },
             },
             ],
@@ -110,11 +112,11 @@ export default {
                 unit: 'month',
               },
               ticks: {
-                fontColor: 'rgba(255, 255, 255, 0.8)',
+                fontColor: WHITE_LOW_TRANSPARENT,
               },
               gridLines: {
                 display: true,
-                color: 'rgba(255, 255, 255, 0.2)',
+                color: WHITE_HIGH_TRANSPARENT,
               },
             },
             ],
@@ -125,7 +127,6 @@ export default {
   },
   props: {
     data: Object,
-    loadingState: Object,
     state: Object,
   },
   components: {
@@ -140,7 +141,6 @@ export default {
       deep: true,
     },
   },
-
   mounted() {
     this.createChart();
   },

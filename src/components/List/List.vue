@@ -3,11 +3,6 @@
     <div v-bind:class="`list-wrap ${(expanded === true) ? 'list-expanded' : ''}`">
       <div class="switches">
         <ArrowButton
-          v-bind:options="['Sort:high', 'Sort:low', 'Sort:default']"
-          v-bind:currentOption="sortDirection"
-          @updateOption="(direction) => toSort(direction)"
-        />
-        <ArrowButton
           v-bind:options="['Total', 'Per 100k']"
           v-bind:currentOption="state.calcType"
           @updateOption="(calcType) => {$emit('updateCalcType', calcType)}"
@@ -21,6 +16,11 @@
           v-bind:options="['Confirmed', 'Deaths', 'Recovered']"
           v-bind:currentOption="state.type"
           @updateOption="(type) => {$emit('updateType', type)}"
+        />
+        <ArrowButton
+          v-bind:options="['Sort:high', 'Sort:low', 'Sort:default']"
+          v-bind:currentOption="sortDirection"
+          @updateOption="(direction) => toSort(direction)"
         />
       </div>
       <div class="search-field">
@@ -65,7 +65,6 @@ export default {
   },
   props: {
     data: Object,
-    loadingState: Object,
     state: Object,
   },
   data() {
@@ -162,7 +161,7 @@ export default {
     padding-left: 0;
     margin: 1rem auto;
 
-    @media (max-width: $breakpoint-width-1) {
+    @media (max-width: $breakpoint-width-1) and (max-height: 800px) {
       max-height: 11vh;
       margin-bottom: 0;
     }
