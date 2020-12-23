@@ -50,7 +50,6 @@ export default {
   watch: {
     state: {
       handler() {
-        console.log(this.state);
         this.updateMap();
       },
       deep: true,
