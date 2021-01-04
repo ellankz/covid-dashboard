@@ -3,13 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "chart.js": "^2.9.4",
     "core-js": "^3.6.5",
+    "leaflet": "^1.7.1",
+    "leaflet-easybutton": "^2.4.0",
+    "leaflet-providers": "^1.11.0",
+    "lodash.keyby": "^4.6.0",
+    "material-icons": "^0.5.1",
+    "moment": "^2.29.1",
     "vue": "^3.0.0"
   },
   "devDependencies": {

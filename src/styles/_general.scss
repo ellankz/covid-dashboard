@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
+$material-icons-font-path: '~material-icons/iconfont/';
+@import '~material-icons/iconfont/material-icons.scss';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Lato', Arial, sans-serif;
+  font-size: 16px;
+  font-weight: normal;
+  line-height: 120%;
+  background-color: $color-black;
+  color: $color-white;
+  margin: 0;
+}
+
+.btn {
+  background-color: $color-gray-1;
+  border: 0;
+  color: $color-white;
+  padding: 0.2rem 0.4rem;
+  font-size: 0.85rem;
+  border-radius: 2px;
+  margin: 0 0.5rem;
+  min-width: 4.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  -webkit-box-shadow: 0px 3px 2px 0px $color-gray; 
+  box-shadow: 0px 3px 2px 0px $color-gray;
+  line-height: 1.15rem;
+
+  &:active {
+    background-color: $color-gray-3;
+    transform: translateY(2px);
+    -webkit-box-shadow: 0px 1px 2px 0px $color-gray; 
+    box-shadow: 0px 1px 2px 0px $color-gray;
+  }
+  
+  &:focus {
+    outline: none;
+  }
+}
+
+
+.expand-toggle {
+  border: 1px solid $color-white;
+  border-radius: 50%;
+  top: -0.5rem;
+  right: -0.5rem;
+  width: 1rem;
+  height: 1rem;
+}
